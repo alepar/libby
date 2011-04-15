@@ -23,17 +23,17 @@ import java.util.List;
 
 public class LuceneBookIndex implements BookIndex {
 
-    public static final Version LUCENE_VERSION = Version.LUCENE_31;
+    private static final Version LUCENE_VERSION = Version.LUCENE_31;
     private static final int QUERY_LIMIT = 10;
 
     private final Analyzer analyzer = new StandardAnalyzer(LUCENE_VERSION);
-    private final IndexWriterConfig iwc = new IndexWriterConfig(LUCENE_VERSION, analyzer);
     private final IndexWriter writer;
     private final Directory dir;
 
     public LuceneBookIndex(Directory dir) {
         this.dir = dir;
         try {
+            IndexWriterConfig iwc = new IndexWriterConfig(LUCENE_VERSION, analyzer);
             iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             writer = new IndexWriter(dir, iwc);
         } catch (Exception e) {
@@ -45,13 +45,13 @@ public class LuceneBookIndex implements BookIndex {
     public void addBook(Book book) throws IOException {
         Document doc = new Document();
 
-        Field pathField = new Field("path", book.file.getCanonicalPath(), Field.Store.YES, Field.Index.NO);
+        Field pathField = new Field("path", book.path, Field.Store.YES, Field.Index.NO);
         doc.add(pathField);
 
         Field nameField = new Field("name", book.name, Field.Store.YES, Field.Index.ANALYZED);
         doc.add(nameField);
 
-        writer.updateDocument(new Term("path", book.file.getCanonicalPath()), doc);
+        writer.updateDocument(new Term("path", book.path), doc);
         writer.commit();
     }
 
@@ -66,8 +66,8 @@ public class LuceneBookIndex implements BookIndex {
         for (ScoreDoc scoreDoc : docs.scoreDocs) {
             Document doc = searcher.doc(scoreDoc.doc);
             String name = doc.get("name");
-            File file = new File(doc.get("path"));
-            booksFound.add(new Book(file, name));
+            String path = doc.get("path");
+            booksFound.add(new Book(path, name));
         }
 
         return booksFound;

@@ -1,13 +1,11 @@
 package ru.alepar.lib.index;
 
-import java.io.File;
-
-public class Book {
+public class Author {
 
     public final String path;
     public final String name;
 
-    public Book(String path, String name) {
+    public Author(String path, String name) {
         this.path = path;
         this.name = name;
     }
@@ -17,10 +15,10 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Book book = (Book) o;
+        Author author = (Author) o;
 
-        if (name != null ? !name.equals(book.name) : book.name != null) return false;
-        if (path != null ? !path.equals(book.path) : book.path != null) return false;
+        if (name != null ? !name.equals(author.name) : author.name != null) return false;
+        if (path != null ? !path.equals(author.path) : author.path != null) return false;
 
         return true;
     }
@@ -34,9 +32,9 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "Author{" +
                 "name='" + name + '\'' +
-                ", path=" + path +
+                ", path='" + path + '\'' +
                 '}';
     }
 }

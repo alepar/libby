@@ -3,8 +3,6 @@ package ru.alepar.lib.index;
 import org.apache.lucene.store.RAMDirectory;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -60,6 +58,14 @@ public class LuceneBookIndexTest {
     }
 
     @Test
+    public void findsBooksIfOrderOfWordsIsSwapped() throws Exception {
+        index.addBook(bookLongTwo);
+
+        List<Book> foundBooks = index.find("bookname long");
+        assertThat(foundBooks, equalTo(Arrays.asList(bookLongTwo)));
+    }
+
+    @Test
     public void findsBooksIgnoringCase() throws Exception {
         index.addBook(bookCaseOne);
         index.addBook(bookCaseTwo);
@@ -70,11 +76,7 @@ public class LuceneBookIndexTest {
     }
 
     private static Book createBook(String fileName, String bookName) {
-        try {
-            return new Book(new File(new File(fileName).getCanonicalPath()), bookName);
-        } catch (IOException e) {
-            throw new RuntimeException("failed to create book", e);
-        }
+        return new Book(fileName, bookName);
     }
 
 }

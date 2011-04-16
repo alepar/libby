@@ -12,21 +12,23 @@ import static org.junit.Assert.*;
 
 public class LuceneBookIndexTest {
 
-    private final BookIndex index =  new LuceneBookIndex(new RAMDirectory());
+    private final BookIndex index = new LuceneBookIndex(new RAMDirectory());
 
-    private final Book bookLong = createBook("somefile", "LoooongBookName");
+    private final Book bookLong = createBook("somefile", "LoooongBookName", null);
 
-    private final Book bookLongTwo = createBook("somefile", "Long BookName");
-    private final Book bookVeryLongTwo = createBook("somefile", "Very Long BookName");
+    private final Book bookLongTwo = createBook("somefile", "Long BookName", null);
+    private final Book bookVeryLongTwo = createBook("somefile", "Very Long BookName", null);
 
-    private final Book bookOne = createBook("somefile", "BookOne");
-    private final Book bookTwo = createBook("somefile", "BookTwo");
-    private final Book bookNot = createBook("somefile", "NotBook");
+    private final Book bookOne = createBook("somefile", "BookOne", null);
+    private final Book bookTwo = createBook("somefile", "BookTwo", null);
+    private final Book bookNot = createBook("somefile", "NotBook", null);
 
-    private final Book bookCaseOne = createBook("somefile", "boOK");
-    private final Book bookCaseTwo = createBook("somefile", "bOOk");
-    private final Book bookCaseNot = createBook("somefile", "Nook");
+    private final Book bookCaseOne = createBook("somefile", "boOK", null);
+    private final Book bookCaseTwo = createBook("somefile", "bOOk", null);
+    private final Book bookCaseNot = createBook("somefile", "Nook", null);
 
+    private final Book bookSeriesOne = createBook("somefile", "", "series one");
+    private final Book bookSeriesTwo = createBook("somefile", "", "series two");
 
 
     @Test
@@ -66,6 +68,15 @@ public class LuceneBookIndexTest {
     }
 
     @Test
+    public void findsBooksBySeries() throws Exception {
+        index.addBook(bookSeriesOne);
+        index.addBook(bookSeriesTwo);
+
+        List<Book> foundBooks = index.find("series");
+        assertThat(foundBooks, equalTo(Arrays.asList(bookSeriesOne, bookSeriesTwo)));
+    }
+
+    @Test
     public void findsBooksIgnoringCase() throws Exception {
         index.addBook(bookCaseOne);
         index.addBook(bookCaseTwo);
@@ -75,8 +86,8 @@ public class LuceneBookIndexTest {
         assertThat(foundBooks, equalTo(Arrays.asList(bookCaseOne, bookCaseTwo)));
     }
 
-    private static Book createBook(String fileName, String bookName) {
-        return new Book(fileName, bookName);
+    private static Book createBook(String fileName, String bookName, String seriesName) {
+        return new Book(fileName, bookName, seriesName);
     }
 
 }

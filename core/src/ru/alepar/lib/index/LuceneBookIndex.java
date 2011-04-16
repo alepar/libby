@@ -16,7 +16,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +50,11 @@ public class LuceneBookIndex implements BookIndex {
         Field nameField = new Field("name", book.name, Field.Store.YES, Field.Index.ANALYZED);
         doc.add(nameField);
 
+        if (book.seriesName != null) {
+            Field seriesNameField = new Field("seriesName", book.seriesName, Field.Store.YES, Field.Index.ANALYZED);
+            doc.add(seriesNameField);
+        }
+
         writer.updateDocument(new Term("path", book.path), doc);
         writer.commit();
     }
@@ -58,18 +62,35 @@ public class LuceneBookIndex implements BookIndex {
     @Override
     public List<Book> find(String bookName) throws ParseException, IOException {
         IndexSearcher searcher = new IndexSearcher(dir);
-        QueryParser parser = new QueryParser(LUCENE_VERSION, "name", analyzer);
-        Query query = parser.parse(bookName);
-        TopDocs docs = searcher.search(query, null, QUERY_LIMIT);
 
-        List<Book> booksFound = new ArrayList<Book>(Math.min(docs.totalHits, QUERY_LIMIT));
-        for (ScoreDoc scoreDoc : docs.scoreDocs) {
-            Document doc = searcher.doc(scoreDoc.doc);
-            String name = doc.get("name");
-            String path = doc.get("path");
-            booksFound.add(new Book(path, name));
+        List<Book> booksFound = new ArrayList<Book>();
+        try {
+            booksFound.addAll(searchField(bookName, searcher, "name"));
+            booksFound.addAll(searchField(bookName, searcher, "seriesName"));
+        } finally {
+            searcher.close();
         }
 
         return booksFound;
+    }
+
+    private List<Book> searchField(String bookName, IndexSearcher searcher, String searchFiels) throws ParseException, IOException {
+        List<Book> booksFound;
+        QueryParser parser = new QueryParser(LUCENE_VERSION, searchFiels, analyzer);
+        Query query = parser.parse(bookName);
+        TopDocs docs = searcher.search(query, null, QUERY_LIMIT);
+
+        booksFound = new ArrayList<Book>(Math.min(docs.totalHits, QUERY_LIMIT));
+        for (ScoreDoc scoreDoc : docs.scoreDocs) {
+            booksFound.add(createBook(searcher.doc(scoreDoc.doc)));
+        }
+        return booksFound;
+    }
+
+    private Book createBook(Document doc) {
+        String name = doc.get("name");
+        String path = doc.get("path");
+        String seriesName = doc.get("seriesName");
+        return new Book(path, name, seriesName);
     }
 }

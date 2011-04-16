@@ -1,15 +1,15 @@
 package ru.alepar.lib.index;
 
-import java.io.File;
-
 public class Book {
 
     public final String path;
     public final String name;
+    public final String seriesName;
 
-    public Book(String path, String name) {
+    public Book(String path, String name, String seriesName) {
         this.path = path;
         this.name = name;
+        this.seriesName = seriesName;
     }
 
     @Override
@@ -21,6 +21,7 @@ public class Book {
 
         if (name != null ? !name.equals(book.name) : book.name != null) return false;
         if (path != null ? !path.equals(book.path) : book.path != null) return false;
+        if (seriesName != null ? !seriesName.equals(book.seriesName) : book.seriesName != null) return false;
 
         return true;
     }
@@ -29,6 +30,7 @@ public class Book {
     public int hashCode() {
         int result = path != null ? path.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (seriesName != null ? seriesName.hashCode() : 0);
         return result;
     }
 
@@ -36,7 +38,8 @@ public class Book {
     public String toString() {
         return "Book{" +
                 "name='" + name + '\'' +
-                ", path=" + path +
+                ", seriesName='" + seriesName + '\'' +
+                ", path='" + path + '\'' +
                 '}';
     }
 }

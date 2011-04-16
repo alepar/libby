@@ -1,4 +1,7 @@
-package ru.alepar.lib.index;
+package ru.alepar.lib.traum;
+
+import ru.alepar.lib.index.Author;
+import ru.alepar.lib.index.Book;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -29,8 +32,8 @@ public class TraumBookInfoExtractor {
 
     private Info extractBookWithNoAuthor(String path, String[] split) {
         return new Info(
-            new Book(path, cleanup(path.substring(0, path.indexOf('.'))), null),
-            null
+                new Book(path, cleanup(path.substring(0, path.indexOf('.'))), null),
+                null
         );
     }
 

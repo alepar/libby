@@ -1,6 +1,8 @@
-package ru.alepar.lib.index;
+package ru.alepar.lib.traum;
 
 import org.junit.Test;
+import ru.alepar.lib.index.Author;
+import ru.alepar.lib.index.Book;
 
 import java.io.File;
 

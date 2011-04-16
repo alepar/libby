@@ -16,7 +16,7 @@ public class TraumBookInfoExtractor {
         }
 
         if ("_".equals(split[1])) {
-            return extractBookWithNoAuthor(path, split);
+            return extractBookWithNoAuthor(path);
         }
 
         if (split.length == 4) {
@@ -30,7 +30,7 @@ public class TraumBookInfoExtractor {
         throw new IllegalArgumentException("doesnt look like traum path: " + path);
     }
 
-    private Info extractBookWithNoAuthor(String path, String[] split) {
+    private Info extractBookWithNoAuthor(String path) {
         return new Info(
                 new Book(path, cleanup(path.substring(0, path.indexOf('.'))), null),
                 null
@@ -44,7 +44,7 @@ public class TraumBookInfoExtractor {
         return new Info(
                 new Book(
                         path,
-                        fileName.substring(0, fileName.indexOf('.')),
+                        cleanup(chopOffAuthor(fileName.substring(0, fileName.indexOf('.')), author)),
                         seriesName),
                 new Author(
                         path.substring(0, path.length() - fileName.length() - seriesName.length() - 1),
@@ -59,7 +59,7 @@ public class TraumBookInfoExtractor {
         return new Info(
                 new Book(
                         path,
-                        fileName.substring(0, fileName.indexOf('.')),
+                        cleanup(chopOffAuthor(fileName.substring(0, fileName.indexOf('.')), author)),
                         null),
                 new Author(
                         path.substring(0, path.length() - fileName.length()),
@@ -73,6 +73,18 @@ public class TraumBookInfoExtractor {
         path = path.replaceAll("[^0-9a-zA-Zа-яА-Я]+", " ");
         path = path.replaceAll("\\s+", " ");
         return path.trim();
+    }
+
+    private static String chopOffAuthor(String bookName, String author) {
+        String[] split = author.split(" ");
+        for (String word : split) {
+            bookName = chopOffWord(bookName, word);
+        }
+        return bookName;
+    }
+
+    private static String chopOffWord(String source, String word) {
+        return source.replaceAll(Pattern.quote(word), "");
     }
 
     public static class Info {

@@ -47,6 +47,31 @@ public class TraumBookInfoExtractorTest {
         assertThat(info.book, equalTo(new Book(path, "ru периодика Журнал PC Magazine Журнал PC Magazine RE 01 2009", null)));
     }
 
+    @Test
+    public void excludesAuthorNameFromBookName() throws Exception {
+        String author = "Лукьяненко Сергей";
+        String bookName = "Лукьяненко - Геном";
+        String path = createPath("ru", "Л", author);
+        String fullPath = path + bookName + ".fb2.zip";
+
+        TraumBookInfoExtractor.Info info = extractor.extract(fullPath);
+        assertThat(info.book, equalTo(new Book(fullPath, "Геном", null)));
+        assertThat(info.author, equalTo(new Author(path, author)));
+    }
+
+    @Test
+    public void excludesAuthorNameFromBookNameWhenWeHaveSeries() throws Exception {
+        String author = "Лукьяненко Сергей";
+        String bookName = "Лукьяненко - Калеки";
+        String seriesName = "Геном";
+        String path = createPath("ru", "Л", author);
+        String fullPath = path + seriesName + File.separatorChar + bookName + ".fb2.zip";
+
+        TraumBookInfoExtractor.Info info = extractor.extract(fullPath);
+        assertThat(info.book, equalTo(new Book(fullPath, "Калеки", seriesName)));
+        assertThat(info.author, equalTo(new Author(path, author)));
+    }
+
     private static String createPath(String... strs) {
         StringBuilder result = new StringBuilder();
         for (String str : strs) {

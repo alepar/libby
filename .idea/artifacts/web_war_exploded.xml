@@ -8,6 +8,9 @@
           <element id="module-output" name="web" />
           <element id="module-output" name="core" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="lucene" module-name="core" />
+        </element>
       </element>
       <element id="gwt-compiler-output" facet="web/gwt/GWT" />
     </root>

@@ -13,6 +13,7 @@ public class TraumIndexer {
     private final BookIndex bookIndex;
     private final AuthorIndex authorIndex;
     private final TraumBookInfoExtractor extractor;
+    private int counter;
 
     public TraumIndexer(Iterable<String> feeder, BookIndex bookIndex, AuthorIndex authorIndex, TraumBookInfoExtractor extractor) {
         this.feeder = feeder;
@@ -23,6 +24,7 @@ public class TraumIndexer {
 
     public void go() {
         for (String filePath : feeder) {
+            counter++;
             try {
                 TraumBookInfoExtractor.Info info = extractor.extract(filePath);
                 bookIndex.addBook(info.book);
@@ -35,6 +37,7 @@ public class TraumIndexer {
         }
     }
 
+//    Kindle/2.5 screen 824x1200
     public static void main(String[] args) throws Exception {
         Date start = new Date();
         BookIndex bookIndex = new LuceneBookIndex(new RAMDirectory());
@@ -43,10 +46,7 @@ public class TraumIndexer {
         TraumIndexer indexer = new TraumIndexer(feeder, bookIndex, authorIndex, new TraumBookInfoExtractor());
         indexer.go();
         Date end = new Date();
-        System.out.println((end.getTime() - start.getTime()) / 1000);
-        System.out.println("Query time");
-        Set<Author> authors = authorIndex.find("фр*");
-        System.out.println(authors);
+        System.out.println(String.format("Build took %d, indexed %d files", (end.getTime() - start.getTime()) / 1000, indexer.counter));
     }
 
 }

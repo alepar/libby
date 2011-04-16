@@ -36,6 +36,15 @@ public class TraumBookInfoExtractorTest {
         assertThat(info.author, equalTo(new Author(path, author)));
     }
 
+    @Test
+    public void bookWithNoAuthorInfoGetsPathIntoNameClearedOffNonWordCharacters() throws Exception {
+        String path = createPath("ru", "_", "_периодика", "Журнал PC Magazine", "Журнал PC Magazine_RE #01_2009.fb2.zip");
+
+        TraumBookInfoExtractor.Info info = extractor.extract(path);
+        assertThat(info.author, equalTo(null));
+        assertThat(info.book, equalTo(new Book(path, "ru периодика Журнал PC Magazine Журнал PC Magazine RE 01 2009", null)));
+    }
+
     private static String createPath(String... strs) {
         StringBuilder result = new StringBuilder();
         for (String str : strs) {

@@ -8,6 +8,14 @@ public class TraumBookInfoExtractor {
     public Info extract(String path) {
         String[] split = path.split(Pattern.quote(File.separator));
 
+        if (split.length < 2) {
+            throw new IllegalArgumentException("doesnt look like traum path: " + path);
+        }
+
+        if ("_".equals(split[1])) {
+            return extractBookWithNoAuthor(path, split);
+        }
+
         if (split.length == 4) {
             return extractBookWithNoSeriesInfo(path, split);
         }
@@ -16,11 +24,14 @@ public class TraumBookInfoExtractor {
             return extractBookWithSeriesInfo(path, split);
         }
 
-        return extractBookWithNoAuthor(path, split);
+        throw new IllegalArgumentException("doesnt look like traum path: " + path);
     }
 
     private Info extractBookWithNoAuthor(String path, String[] split) {
-        throw new RuntimeException("alepar havent implemented me yet");
+        return new Info(
+            new Book(path, cleanup(path.substring(0, path.indexOf('.'))), null),
+            null
+        );
     }
 
     private Info extractBookWithSeriesInfo(String path, String[] split) {
@@ -52,6 +63,13 @@ public class TraumBookInfoExtractor {
                         author
                 )
         );
+    }
+
+    private static String cleanup(String path) {
+        path = path.replaceAll(Pattern.quote(File.separator) + "+", " ");
+        path = path.replaceAll("[^0-9a-zA-Zа-яА-Я]+", " ");
+        path = path.replaceAll("\\s+", " ");
+        return path.trim();
     }
 
     public static class Info {

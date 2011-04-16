@@ -1,0 +1,13 @@
+package ru.alepar.lib.index;
+
+import org.apache.lucene.queryParser.ParseException;
+
+import java.io.IOException;
+import java.util.Set;
+
+public interface AuthorIndex {
+
+    void addAuthor(Author author) throws IOException;
+
+    Set<Author> find(String authorName) throws ParseException, IOException;
+}

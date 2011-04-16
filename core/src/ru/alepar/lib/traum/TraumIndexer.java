@@ -1,7 +1,9 @@
 package ru.alepar.lib.traum;
 
 import org.apache.lucene.store.RAMDirectory;
+import ru.alepar.lib.index.AuthorIndex;
 import ru.alepar.lib.index.BookIndex;
+import ru.alepar.lib.index.LuceneAuthorIndex;
 import ru.alepar.lib.index.LuceneBookIndex;
 
 import java.io.File;
@@ -12,11 +14,13 @@ public class TraumIndexer {
 
     private final File traumDir;
     private final BookIndex bookIndex;
+    private final AuthorIndex authorIndex;
     private final TraumBookInfoExtractor extractor;
 
-    public TraumIndexer(File traumDir, BookIndex bookIndex, TraumBookInfoExtractor extractor) {
+    public TraumIndexer(File traumDir, BookIndex bookIndex, AuthorIndex authorIndex, TraumBookInfoExtractor extractor) {
         this.traumDir = traumDir;
         this.bookIndex = bookIndex;
+        this.authorIndex = authorIndex;
         this.extractor = extractor;
     }
 
@@ -35,6 +39,9 @@ public class TraumIndexer {
                 try {
                     TraumBookInfoExtractor.Info info = extractor.extract(chopOffTraumDir(child.getCanonicalPath(), traumDir.getCanonicalPath()));
                     bookIndex.addBook(info.book);
+                    if (info.author != null) {
+                        authorIndex.addAuthor(info.author);
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException("ok, my code is shit", e);
                 }
@@ -48,8 +55,9 @@ public class TraumIndexer {
 
     public static void main(String[] args) {
         Date start = new Date();
-        LuceneBookIndex bookIndex = new LuceneBookIndex(new RAMDirectory());
-        TraumIndexer indexer = new TraumIndexer(new File("f:\\"), bookIndex, new TraumBookInfoExtractor());
+        BookIndex bookIndex = new LuceneBookIndex(new RAMDirectory());
+        AuthorIndex authorIndex = new LuceneAuthorIndex(new RAMDirectory());
+        TraumIndexer indexer = new TraumIndexer(new File("f:\\test"), bookIndex, authorIndex, new TraumBookInfoExtractor());
         indexer.go();
         Date end = new Date();
         System.out.println((end.getTime() - start.getTime()) / 1000);

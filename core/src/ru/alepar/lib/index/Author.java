@@ -1,6 +1,6 @@
 package ru.alepar.lib.index;
 
-public class Author {
+public class Author implements Comparable<Author> {
 
     public final String path;
     public final String name;
@@ -31,10 +31,23 @@ public class Author {
     }
 
     @Override
+    public int compareTo(Author other) {
+        int cmp;
+
+        cmp = this.name.compareTo(other.name);
+        if (cmp != 0) {
+            return cmp;
+        }
+
+        return this.path.compareTo(other.path);
+    }
+
+    @Override
     public String toString() {
         return "Author{" +
                 "name='" + name + '\'' +
                 ", path='" + path + '\'' +
                 '}';
     }
+
 }

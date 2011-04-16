@@ -8,6 +8,7 @@ import java.io.IOException;
 public class Chopper {
 
     private final String basePath;
+    private final int offset;
 
     public Chopper(File dir) {
         try {
@@ -15,6 +16,7 @@ public class Chopper {
         } catch (IOException e) {
             throw new Oops(e);
         }
+        offset = basePath.endsWith(File.separator) ? 0 : 1;
     }
 
     public String chop(File file) {
@@ -24,7 +26,7 @@ public class Chopper {
         } catch (IOException e) {
             throw new Oops(e);
         }
-        return path.substring(basePath.length());
+        return path.substring(basePath.length() + offset);
 
     }
 

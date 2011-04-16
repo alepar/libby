@@ -23,4 +23,10 @@ public class ChopperTest {
         assertThat(chopper.chop(new File("c:\\ru\\alepar\\smth")), equalTo("alepar\\smth"));
     }
 
+    @Test
+    public void someOtherWeirdCaseIsFineToo() throws Exception {
+        Chopper chopper = new Chopper(new File("F:\\test"));
+
+        assertThat(chopper.chop(new File("f:\\test\\ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip")), equalTo("ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip"));
+    }
 }

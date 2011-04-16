@@ -17,8 +17,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class LuceneBookIndex implements BookIndex {
 
@@ -60,10 +59,10 @@ public class LuceneBookIndex implements BookIndex {
     }
 
     @Override
-    public List<Book> find(String bookName) throws ParseException, IOException {
+    public Set<Book> find(String bookName) throws ParseException, IOException {
         IndexSearcher searcher = new IndexSearcher(dir);
 
-        List<Book> booksFound = new ArrayList<Book>();
+        SortedSet<Book> booksFound = new TreeSet<Book>();
         try {
             booksFound.addAll(searchField(bookName, searcher, "name"));
             booksFound.addAll(searchField(bookName, searcher, "seriesName"));

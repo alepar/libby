@@ -1,6 +1,6 @@
 package ru.alepar.lib.index;
 
-public class Book {
+public class Book implements Comparable<Book> {
 
     public final String path;
     public final String name;
@@ -32,6 +32,36 @@ public class Book {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (seriesName != null ? seriesName.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Book other) {
+        int cmp;
+
+        cmp = compareNpeSafe(this.seriesName, other.seriesName);
+        if (cmp != 0) {
+            return cmp;
+        }
+
+        cmp = this.name.compareTo(other.name);
+        if (cmp != 0) {
+            return cmp;
+        }
+
+        return this.path.compareTo(other.path);
+    }
+
+    private int compareNpeSafe(String one, String two) {
+        if (one == null && two == null) {
+            return 0;
+        }
+        if (one == null) {
+            return 1;
+        }
+        if (two == null) {
+            return -1;
+        }
+        return one.compareTo(two);
     }
 
     @Override

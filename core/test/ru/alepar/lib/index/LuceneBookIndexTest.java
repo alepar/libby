@@ -4,8 +4,8 @@ import org.apache.lucene.store.RAMDirectory;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -35,8 +35,8 @@ public class LuceneBookIndexTest {
     public void findsBookIfQueriedExactlyByItsName() throws Exception {
         index.addBook(bookLong);
 
-        List<Book> foundBooks = index.find("LoooongBookName");
-        assertThat(foundBooks, equalTo(Collections.singletonList(bookLong)));
+        Set<Book> foundBooks = index.find("LoooongBookName");
+        assertThat(foundBooks, equalTo(createSet(bookLong)));
     }
 
     @Test
@@ -45,8 +45,8 @@ public class LuceneBookIndexTest {
         index.addBook(bookLongTwo);
         index.addBook(bookVeryLongTwo);
 
-        List<Book> foundBooks = index.find("Long");
-        assertThat(foundBooks, equalTo(Arrays.asList(bookLongTwo, bookVeryLongTwo)));
+        Set<Book> foundBooks = index.find("Long");
+        assertThat(foundBooks, equalTo(createSet(bookVeryLongTwo, bookLongTwo)));
     }
 
     @Test
@@ -55,16 +55,16 @@ public class LuceneBookIndexTest {
         index.addBook(bookTwo);
         index.addBook(bookNot);
 
-        List<Book> foundBooks = index.find("Book*");
-        assertThat(foundBooks, equalTo(Arrays.asList(bookOne, bookTwo)));
+        Set<Book> foundBooks = index.find("Book*");
+        assertThat(foundBooks, equalTo(createSet(bookOne, bookTwo)));
     }
 
     @Test
     public void findsBooksIfOrderOfWordsIsSwapped() throws Exception {
         index.addBook(bookLongTwo);
 
-        List<Book> foundBooks = index.find("bookname long");
-        assertThat(foundBooks, equalTo(Arrays.asList(bookLongTwo)));
+        Set<Book> foundBooks = index.find("bookname long");
+        assertThat(foundBooks, equalTo(createSet(bookLongTwo)));
     }
 
     @Test
@@ -72,8 +72,8 @@ public class LuceneBookIndexTest {
         index.addBook(bookSeriesOne);
         index.addBook(bookSeriesTwo);
 
-        List<Book> foundBooks = index.find("series");
-        assertThat(foundBooks, equalTo(Arrays.asList(bookSeriesOne, bookSeriesTwo)));
+        Set<Book> foundBooks = index.find("series");
+        assertThat(foundBooks, equalTo(createSet(bookSeriesOne, bookSeriesTwo)));
     }
 
     @Test
@@ -82,12 +82,16 @@ public class LuceneBookIndexTest {
         index.addBook(bookCaseTwo);
         index.addBook(bookCaseNot);
 
-        List<Book> foundBooks = index.find("book");
-        assertThat(foundBooks, equalTo(Arrays.asList(bookCaseOne, bookCaseTwo)));
+        Set<Book> foundBooks = index.find("book");
+        assertThat(foundBooks, equalTo(createSet(bookCaseOne, bookCaseTwo)));
     }
 
     private static Book createBook(String fileName, String bookName, String seriesName) {
         return new Book(fileName, bookName, seriesName);
+    }
+
+    private static Set<Book> createSet(Book... books) {
+        return new TreeSet<Book>(Arrays.asList(books));
     }
 
 }

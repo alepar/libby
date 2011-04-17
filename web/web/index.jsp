@@ -1,6 +1,6 @@
 <%@ page import="ru.alepar.lib.index.Author" %>
 <%@ page import="ru.alepar.lib.index.Book" %>
-<%@ page import="ru.alepar.web.IndexHolder" %>
+<%@ page import="ru.alepar.web.AppHolder" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 <html>
 <head>
@@ -17,7 +17,7 @@
 <%
     String query = request.getParameter("query");
     if (query != null) {
-        IndexHolder.Result result = IndexHolder.query(query);
+        AppHolder.Result result = AppHolder.query(query);
         Author[] authors = result.authors;
         Book[] books = result.books;
         int max = Math.max(authors.length, books.length);

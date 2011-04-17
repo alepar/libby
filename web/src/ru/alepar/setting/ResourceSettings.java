@@ -1,4 +1,4 @@
-package ru.alepar.web;
+package ru.alepar.setting;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

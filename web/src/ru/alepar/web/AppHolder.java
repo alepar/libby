@@ -6,15 +6,17 @@ import ru.alepar.lib.index.*;
 import ru.alepar.lib.traum.FileFeeder;
 import ru.alepar.lib.traum.TraumBookInfoExtractor;
 import ru.alepar.lib.traum.TraumIndexer;
+import ru.alepar.setting.ResourceSettings;
+import ru.alepar.setting.Settings;
 
 import java.io.File;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class IndexHolder {
+public class AppHolder {
 
-    private static final Logger log = LoggerFactory.getLogger(IndexHolder.class);
+    private static final Logger log = LoggerFactory.getLogger(AppHolder.class);
 
     private static BookIndex bookIndex;
     private static AuthorIndex authorIndex;

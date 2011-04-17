@@ -9,7 +9,9 @@ import ru.alepar.lib.traum.TraumBookInfoExtractor;
 import ru.alepar.lib.traum.TraumIndexer;
 
 import java.io.File;
+import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class IndexHolder {
 
@@ -22,15 +24,28 @@ public class IndexHolder {
     static {
         ResourceBundle bundle = ResourceBundle.getBundle("/libby");
         String traumRoot = bundle.getString("traum.root");
-        log.debug("traum.root = {}", traumRoot);
+        log.info("traum.root = {}", traumRoot);
 
+        Date start = new Date();
         Iterable<String> feeder = new FileFeeder(new File(traumRoot));
         TraumIndexer indexer = new TraumIndexer(feeder, bookIndex, authorIndex, extractor);
         indexer.go();
+        Date end = new Date();
+        log.info("Build took {}s, indexed {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());
     }
 
     public static Result query(String query) {
-        throw new RuntimeException("alepar havent implemented me yet");
+        try {
+            Set<Book> books = bookIndex.find(query);
+            Set<Author> authors = authorIndex.find(query);
+            return new Result(
+                    authors.toArray(new Author[authors.size()]),
+                    books.toArray(new Book[books.size()])
+            );
+        } catch (Exception e) {
+            log.error("query failed: " + query, e);
+            throw new RuntimeException("query failed: " + query, e);
+        }
     }
 
     public static class Result {

@@ -1,11 +1,13 @@
 package ru.alepar.lib.traum;
 
 import org.apache.lucene.store.RAMDirectory;
-import ru.alepar.lib.index.*;
+import ru.alepar.lib.index.AuthorIndex;
+import ru.alepar.lib.index.BookIndex;
+import ru.alepar.lib.index.LuceneAuthorIndex;
+import ru.alepar.lib.index.LuceneBookIndex;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Set;
 
 public class TraumIndexer {
 
@@ -37,7 +39,11 @@ public class TraumIndexer {
         }
     }
 
-//    Kindle/2.5 screen 824x1200
+    public int getCounter() {
+        return counter;
+    }
+
+    //    Kindle/2.5 screen 824x1200
     public static void main(String[] args) throws Exception {
         Date start = new Date();
         BookIndex bookIndex = new LuceneBookIndex(new RAMDirectory());

@@ -14,8 +14,6 @@ import java.util.Set;
 
 public class IndexHolder {
 
-    //    Kindle/2.5 screen 824x1200
-
     private static final Logger log = LoggerFactory.getLogger(IndexHolder.class);
 
     private static BookIndex bookIndex;

@@ -46,7 +46,7 @@ public class IndexHolder {
                 TraumIndexer indexer = new TraumIndexer(feeder, bookIndex, authorIndex, extractor);
                 indexer.go();
                 Date end = new Date();
-                log.info("Build took {}s, indexed {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());
+                log.info("reindex took {}s, added {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());
             } else {
                 log.warn("skipping reindex");
             }

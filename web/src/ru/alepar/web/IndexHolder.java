@@ -1,23 +1,30 @@
 package ru.alepar.web;
 
 import org.apache.lucene.store.RAMDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.alepar.lib.index.*;
 import ru.alepar.lib.traum.FileFeeder;
 import ru.alepar.lib.traum.TraumBookInfoExtractor;
 import ru.alepar.lib.traum.TraumIndexer;
 
 import java.io.File;
+import java.util.ResourceBundle;
 
 public class IndexHolder {
 
+    private static final Logger log = LoggerFactory.getLogger(IndexHolder.class);
+
     private final static BookIndex bookIndex = new LuceneBookIndex(new RAMDirectory());
-    private static AuthorIndex authorIndex = new LuceneAuthorIndex(new RAMDirectory());
+    private final static AuthorIndex authorIndex = new LuceneAuthorIndex(new RAMDirectory());
     private final static TraumBookInfoExtractor extractor = new TraumBookInfoExtractor();
 
     static {
-//        ResourceBundle bundle = ResourceBundle.getBundle("/libby");
-//        Iterable<String> feeder = new FileFeeder(new File(bundle.getString("traum.root")));
-        Iterable<String> feeder = new FileFeeder(new File("f:\\traum"));
+        ResourceBundle bundle = ResourceBundle.getBundle("/libby");
+        String traumRoot = bundle.getString("traum.root");
+        log.debug("traum.root = {}", traumRoot);
+
+        Iterable<String> feeder = new FileFeeder(new File(traumRoot));
         TraumIndexer indexer = new TraumIndexer(feeder, bookIndex, authorIndex, extractor);
         indexer.go();
     }

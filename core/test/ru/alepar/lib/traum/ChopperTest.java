@@ -11,22 +11,22 @@ public class ChopperTest {
 
     @Test
     public void worksfineWithRootAsABaseDir() throws Exception {
-        Chopper chopper = new Chopper(new File("c:\\"));
+        Chopper chopper = new Chopper(new File("\\"));
 
-        assertThat(chopper.chop(new File("c:\\ru\\alepar\\smth")), equalTo("ru\\alepar\\smth"));
+        assertThat(chopper.chop(new File("\\ru\\alepar\\smth")), equalTo("ru\\alepar\\smth"));
     }
 
     @Test
     public void worksfineWithSubfolderAsABaseDir() throws Exception {
-        Chopper chopper = new Chopper(new File("c:\\ru"));
+        Chopper chopper = new Chopper(new File("\\ru"));
 
-        assertThat(chopper.chop(new File("c:\\ru\\alepar\\smth")), equalTo("alepar\\smth"));
+        assertThat(chopper.chop(new File("\\ru\\alepar\\smth")), equalTo("alepar\\smth"));
     }
 
     @Test
     public void someOtherWeirdCaseIsFineToo() throws Exception {
-        Chopper chopper = new Chopper(new File("F:\\test"));
+        Chopper chopper = new Chopper(new File("\\test"));
 
-        assertThat(chopper.chop(new File("f:\\test\\ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip")), equalTo("ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip"));
+        assertThat(chopper.chop(new File("\\test\\ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip")), equalTo("ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip"));
     }
 }

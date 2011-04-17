@@ -1,5 +1,6 @@
 package ru.alepar.web;
 
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class ResourceSettings implements Settings {
@@ -22,6 +23,10 @@ public class ResourceSettings implements Settings {
 
     @Override
     public boolean reindex() {
-        return "true".equals(bundle.getString("reindex"));
+        try {
+            return "true".equals(bundle.getString("reindex"));
+        } catch (MissingResourceException e) {
+            return false;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package ru.alepar.ebook;
+package ru.alepar.ebook.format;
 
 public class UserAgentDetector {
 

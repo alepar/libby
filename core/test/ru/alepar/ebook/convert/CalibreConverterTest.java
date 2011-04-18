@@ -71,11 +71,23 @@ public class CalibreConverterTest {
     }
 
     @Test
-    public void thirsArgIsOutputFormat() throws Exception {
+    public void thirdArgIsOutputProfile() throws Exception {
         final File input = new File("somefile.fb2.zip");
 
         mockery.checking(new Expectations() {{
             one(exec).exec(with(item(3, equalTo("--output-profile"))));
+            will(returnValue(0));
+        }});
+
+        converter.convertFor(EbookType.KINDLE_DX, input);
+    }
+
+    @Test
+    public void fourthArgIsValueForOutputFormat() throws Exception {
+        final File input = new File("somefile.fb2.zip");
+
+        mockery.checking(new Expectations() {{
+            one(exec).exec(with(item(4, equalTo("out_fmt"))));
             will(returnValue(0));
         }});
 

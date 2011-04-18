@@ -2,13 +2,13 @@ package ru.alepar.testsupport;
 
 import org.hamcrest.Description;
 
-public class ArgumentMatcher extends BaseArgumentMatcher {
+public class ArgumentRegexpMatcher extends BaseArgumentMatcher {
 
-    private final String argument;
+    private final String argumentPattern;
 
-    public ArgumentMatcher(int argNum, String argument) {
+    public ArgumentRegexpMatcher(int argNum, String argumentPattern) {
         super(argNum);
-        this.argument = argument;
+        this.argumentPattern = argumentPattern;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class ArgumentMatcher extends BaseArgumentMatcher {
         String str = (String) o;
 
         String arg = extractArg(str);
-        return arg != null && arg.equals(argument);
+        return arg != null && arg.matches(argumentPattern);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ArgumentMatcher extends BaseArgumentMatcher {
         description
                 .appendText("cmd where argument no ")
                 .appendValue(argNum)
-                .appendText(" is ")
-                .appendValue(argument);
+                .appendText(" matches ")
+                .appendValue(argumentPattern);
     }
 }

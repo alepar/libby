@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import ru.alepar.ebook.format.EbookType;
 import ru.alepar.ebook.format.FormatProvider;
-import ru.alepar.testsupport.MyMatchers;
 
 import java.io.File;
 
@@ -64,7 +63,19 @@ public class CalibreConverterTest {
         final File input = new File("somefile.fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(MyMatchers.argRegexp(2, ".*\\.ext")));
+            one(exec).exec(with(argRegexp(2, ".*\\.ext")));
+            will(returnValue(0));
+        }});
+
+        converter.convertFor(EbookType.KINDLE_DX, input);
+    }
+
+    @Test
+    public void thirsArgIsOutputFormat() throws Exception {
+        final File input = new File("somefile.fb2.zip");
+
+        mockery.checking(new Expectations() {{
+            one(exec).exec(with(arg(3, "--output-profile")));
             will(returnValue(0));
         }});
 

@@ -3,8 +3,12 @@ package ru.alepar.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.alepar.ebook.convert.CalibreConverter;
+import ru.alepar.ebook.convert.Exec;
 import ru.alepar.ebook.convert.RuntimeExec;
+import ru.alepar.ebook.format.EbookType;
+import ru.alepar.ebook.format.FormatProvider;
 import ru.alepar.ebook.format.StaticFormatProvider;
+import ru.alepar.ebook.format.UserAgentDetector;
 import ru.alepar.lib.index.*;
 import ru.alepar.lib.traum.FileFeeder;
 import ru.alepar.lib.traum.TraumBookInfoExtractor;
@@ -21,20 +25,25 @@ public class AppHolder {
 
     private static final Logger log = LoggerFactory.getLogger(AppHolder.class);
 
+    private static final TraumBookInfoExtractor extractor = new TraumBookInfoExtractor();
+    private static final Settings settings = new ResourceSettings(ResourceBundle.getBundle("/libby"));
+    private static final FormatProvider provider = new StaticFormatProvider();
+    private static final Exec exec = new RuntimeExec();
+    private static final UserAgentDetector detector = new UserAgentDetector();
+
     private static BookIndex bookIndex;
     private static AuthorIndex authorIndex;
-    private final static TraumBookInfoExtractor extractor = new TraumBookInfoExtractor();
     private static CalibreConverter converter;
+
 
     static {
         try {
-            Settings settings = new ResourceSettings(ResourceBundle.getBundle("/libby"));
             log.info("traum.root = {}", settings.traumRoot());
 
-            instantiateIndexes(settings);
-            reindex(settings);
+            instantiateIndexes();
+            reindex();
 
-            converter = new CalibreConverter(settings.calibreConvert(), new RuntimeExec(), new StaticFormatProvider());
+            converter = new CalibreConverter(settings.calibreConvert(), exec, provider);
 
         } catch (Exception e) {
             log.error("failed to bring up libby, terminating", e);
@@ -42,7 +51,7 @@ public class AppHolder {
         }
     }
 
-    private static void reindex(Settings settings) {
+    private static void reindex() {
         if (settings.traumReindex()) {
             log.info("reindexing");
             Date start = new Date();
@@ -56,7 +65,7 @@ public class AppHolder {
         }
     }
 
-    private static void instantiateIndexes(Settings settings) {
+    private static void instantiateIndexes() {
         IndexFactory indexFactory;
         if (settings.traumIndex() != null) {
             log.info("storing index to {}", settings.traumIndex());
@@ -82,6 +91,26 @@ public class AppHolder {
             log.warn("query failed: " + query, e);
             throw new RuntimeException("query failed: " + query, e);
         }
+    }
+
+    public static File convertFile(File in, EbookType type) {
+        return converter.convertFor(type, in);
+    }
+
+    public static File getFile(String path) {
+        return new File(settings.traumRoot(), path);
+    }
+
+    public static EbookType detect(String header) {
+        return detector.detect(header);
+    }
+
+    public static String convertName(String name, EbookType type) {
+        if (type == EbookType.UNKNOWN) {
+            return name;
+        }
+        String nameWithoutExt = name.substring(0, name.indexOf("."));
+        return String.format("%s.%s", nameWithoutExt, provider.extension(type));
     }
 
     public static class Result {

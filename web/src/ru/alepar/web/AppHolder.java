@@ -2,6 +2,9 @@ package ru.alepar.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.alepar.ebook.convert.CalibreConverter;
+import ru.alepar.ebook.convert.RuntimeExec;
+import ru.alepar.ebook.format.StaticFormatProvider;
 import ru.alepar.lib.index.*;
 import ru.alepar.lib.traum.FileFeeder;
 import ru.alepar.lib.traum.TraumBookInfoExtractor;
@@ -21,39 +24,50 @@ public class AppHolder {
     private static BookIndex bookIndex;
     private static AuthorIndex authorIndex;
     private final static TraumBookInfoExtractor extractor = new TraumBookInfoExtractor();
+    private static CalibreConverter converter;
 
     static {
         try {
             Settings settings = new ResourceSettings(ResourceBundle.getBundle("/libby"));
             log.info("traum.root = {}", settings.traumRoot());
 
-            IndexFactory indexFactory;
-            if (settings.traumIndex() != null) {
-                log.info("storing index to {}", settings.traumIndex());
-                indexFactory = new FSIndexFactory(settings.traumIndex());
-            } else {
-                log.info("storring index to RAM");
-                indexFactory = new RAMIndexFactory();
-            }
+            instantiateIndexes(settings);
+            reindex(settings);
 
-            bookIndex = indexFactory.createBookIndex();
-            authorIndex = indexFactory.createAuthorIndex();
+            converter = new CalibreConverter(settings.calibreConvert(), new RuntimeExec(), new StaticFormatProvider());
 
-            if (settings.reindex()) {
-                log.info("reindexing");
-                Date start = new Date();
-                Iterable<String> feeder = new FileFeeder(new File(settings.traumRoot()));
-                TraumIndexer indexer = new TraumIndexer(feeder, bookIndex, authorIndex, extractor);
-                indexer.go();
-                Date end = new Date();
-                log.info("reindex took {}s, added {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());
-            } else {
-                log.warn("skipping reindex");
-            }
         } catch (Exception e) {
             log.error("failed to bring up libby, terminating", e);
             System.exit(-1);
         }
+    }
+
+    private static void reindex(Settings settings) {
+        if (settings.traumReindex()) {
+            log.info("reindexing");
+            Date start = new Date();
+            Iterable<String> feeder = new FileFeeder(new File(settings.traumRoot()));
+            TraumIndexer indexer = new TraumIndexer(feeder, bookIndex, authorIndex, extractor);
+            indexer.go();
+            Date end = new Date();
+            log.info("reindex took {}s, added {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());
+        } else {
+            log.warn("skipping reindex");
+        }
+    }
+
+    private static void instantiateIndexes(Settings settings) {
+        IndexFactory indexFactory;
+        if (settings.traumIndex() != null) {
+            log.info("storing index to {}", settings.traumIndex());
+            indexFactory = new FSIndexFactory(settings.traumIndex());
+        } else {
+            log.info("storring index to RAM");
+            indexFactory = new RAMIndexFactory();
+        }
+
+        bookIndex = indexFactory.createBookIndex();
+        authorIndex = indexFactory.createAuthorIndex();
     }
 
     public static Result query(String query) {

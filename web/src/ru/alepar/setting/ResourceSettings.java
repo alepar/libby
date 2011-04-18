@@ -22,11 +22,16 @@ public class ResourceSettings implements Settings {
     }
 
     @Override
-    public boolean reindex() {
+    public boolean traumReindex() {
         try {
-            return "true".equals(bundle.getString("reindex"));
+            return "true".equals(bundle.getString("traum.reindex"));
         } catch (MissingResourceException e) {
             return false;
         }
+    }
+
+    @Override
+    public String calibreConvert() {
+        return bundle.getString("calibre.convert");
     }
 }

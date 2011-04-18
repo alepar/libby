@@ -5,5 +5,7 @@ public interface Settings {
 
     String traumIndex();
 
-    boolean reindex();
+    boolean traumReindex();
+
+    String calibreConvert();
 }

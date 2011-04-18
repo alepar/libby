@@ -4,7 +4,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import ru.alepar.ebook.format.EbookType;
 import ru.alepar.ebook.format.FormatProvider;
-import ru.alepar.ebook.format.StaticFormatProvider;
 import ru.alepar.io.IOUtils;
 import ru.alepar.lib.stuff.Oops;
 
@@ -75,14 +74,6 @@ public class CalibreConverter implements Converter {
 
     private ZipArchiveEntry getFirstEntry(ZipFile zipFile) {
         return (ZipArchiveEntry) zipFile.getEntriesInPhysicalOrder().nextElement();
-    }
-
-    public static void main(String[] args) throws Exception {
-        String binary = "c:\\Program Files (x86)\\Calibre2\\ebook-convert.exe";
-        CalibreConverter converter = new CalibreConverter(binary, new RuntimeExec(), new StaticFormatProvider());
-
-        File out = converter.convertFor(EbookType.KINDLE_DX, new File("c:\\temp\\Лукьяненко 1 Геном.fb2.zip"));
-        System.out.println(out.getCanonicalPath());
     }
 
 }

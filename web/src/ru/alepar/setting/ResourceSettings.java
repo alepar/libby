@@ -18,7 +18,11 @@ public class ResourceSettings implements Settings {
 
     @Override
     public String traumIndex() {
-        return bundle.getString("traum.index");
+        try {
+            return bundle.getString("traum.index");
+        } catch (MissingResourceException e) {
+            return null;
+        }
     }
 
     @Override

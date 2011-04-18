@@ -71,7 +71,7 @@ public class AppHolder {
             log.info("storing index to {}", settings.traumIndex());
             indexFactory = new FSIndexFactory(settings.traumIndex());
         } else {
-            log.info("storring index to RAM");
+            log.info("storing index to RAM");
             indexFactory = new RAMIndexFactory();
         }
 

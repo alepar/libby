@@ -8,7 +8,8 @@
     <meta equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-
+<div align="right"><%=AppHolder.detect(request.getHeader("User-Agent"))%>
+</div>
 <form action="" method="get">
     <input type="text" name="query"/>
     <input type="submit" value="go"/>

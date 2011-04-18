@@ -60,7 +60,7 @@ public class CalibreConverterTest {
 
     @Test
     public void secondArgIsOutputFileWithProperExtension() throws Exception {
-        final File input = new File("somefile.fb2.zip");
+        final File input = new File("somefile.fb2");
 
         mockery.checking(new Expectations() {{
             one(exec).exec(with(item(2, like(".*\\.ext"))));
@@ -72,7 +72,7 @@ public class CalibreConverterTest {
 
     @Test
     public void thirdArgIsOutputProfile() throws Exception {
-        final File input = new File("somefile.fb2.zip");
+        final File input = new File("somefile.fb2");
 
         mockery.checking(new Expectations() {{
             one(exec).exec(with(item(3, equalTo("--output-profile"))));
@@ -84,7 +84,7 @@ public class CalibreConverterTest {
 
     @Test
     public void fourthArgIsValueForOutputFormat() throws Exception {
-        final File input = new File("somefile.fb2.zip");
+        final File input = new File("somefile.fb2");
 
         mockery.checking(new Expectations() {{
             one(exec).exec(with(item(4, equalTo("out_fmt"))));

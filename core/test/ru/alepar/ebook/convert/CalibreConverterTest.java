@@ -38,7 +38,7 @@ public class CalibreConverterTest {
     @Test
     public void executesRightBinary() throws Exception {
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(startsWith(BINARY)));
+            one(exec).exec(with(item(0, startsWith(BINARY))));
             will(returnValue(0));
         }});
 
@@ -51,7 +51,7 @@ public class CalibreConverterTest {
         final String inputPath = input.getCanonicalPath();
 
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(arg(1, inputPath)));
+            one(exec).exec(with(item(1, equalTo(inputPath))));
             will(returnValue(0));
         }});
 
@@ -63,7 +63,7 @@ public class CalibreConverterTest {
         final File input = new File("somefile.fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(argRegexp(2, ".*\\.ext")));
+            one(exec).exec(with(item(2, like(".*\\.ext"))));
             will(returnValue(0));
         }});
 
@@ -75,7 +75,7 @@ public class CalibreConverterTest {
         final File input = new File("somefile.fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(arg(3, "--output-profile")));
+            one(exec).exec(with(item(3, equalTo("--output-profile"))));
             will(returnValue(0));
         }});
 

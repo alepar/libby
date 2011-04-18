@@ -2,6 +2,6 @@ package ru.alepar.ebook.convert;
 
 public interface Exec {
 
-    int exec(String cmd);
+    int exec(String[] cmd);
 
 }

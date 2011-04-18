@@ -3,11 +3,13 @@ package ru.alepar.testsupport;
 import org.hamcrest.Matcher;
 
 public class MyMatchers {
-    public static Matcher<String> arg(int argNum, String argument) {
-        return new ArgumentMatcher(argNum, argument);
+
+    public static <T> Matcher<T[]> item(int item, Matcher<T> itemMatcher) {
+        return new ArrayItemMatcher<T>(item, itemMatcher);
     }
 
-    public static Matcher<String> argRegexp(int argNum, String inputPath) {
-        return new ArgumentRegexpMatcher(argNum, inputPath);
+    public static Matcher<String> like(String regexp) {
+        return new StringRegexpMatcher(regexp);
     }
+
 }

@@ -27,8 +27,13 @@ public class CalibreConverter implements Converter {
             if (!outputFile.delete()) {
                 throw new Oops("cudnt trash " + outputFileName);
             }
-            String cmd = String.format("%s %s %s --output-profile %s", binary, inputPath, outputFileName, provider.outputProfile(type));
-            int retCode = exec.exec(cmd);
+            int retCode = exec.exec(new String[]{
+                    binary,
+                    inputPath,
+                    outputFileName,
+                    "--output-profile",
+                    provider.outputProfile(type)
+            });
             if (retCode != 0) {
                 throw new RuntimeException("exec retcode = " + retCode);
             }

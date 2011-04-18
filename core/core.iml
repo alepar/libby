@@ -9,13 +9,13 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
-      <library name="lucene">
+      <library name="commons">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/lucene/lucene-core-3.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/commons/commons-compress-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../lib/lucene/lucene-core-3.1.0-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/../lib/commons/commons-compress-1.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -31,6 +31,17 @@
           <root url="jar://$MODULE_DIR$/../lib/logging/logback-classic-0.9.28-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib/logging/logback-core-0.9.28-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib/logging/slf4j-api-1.6.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="lucene">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/lucene/lucene-core-3.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../lib/lucene/lucene-core-3.1.0-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>

@@ -1,11 +1,19 @@
 package ru.alepar.ebook.convert;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class RuntimeExec implements Exec {
+
+    private final Logger log = LoggerFactory.getLogger(RuntimeExec.class);
+
     @Override
     public int exec(String[] cmd) {
         try {
+            log.debug("Runtime.exec {}", Arrays.toString(cmd));
             Process proc = Runtime.getRuntime().exec(cmd);
             proc.getOutputStream().close();
             StreamSink stdinSink = new StreamSink(proc.getInputStream());

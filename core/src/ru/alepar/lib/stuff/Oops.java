@@ -6,4 +6,7 @@ public class Oops extends RuntimeException {
         super(cause);
     }
 
+    public Oops(String message) {
+        super(message);
+    }
 }

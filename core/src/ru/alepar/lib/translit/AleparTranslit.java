@@ -74,8 +74,12 @@ public class AleparTranslit implements Translit {
     }
 
     private Record continues(String str, Record prefix, int i) {
-        if (str.substring(prefix.offset, prefix.offset + map[i][1].length()).equals(map[i][1])) {
-            return new Record(prefix.offset + map[i][1].length(), prefix.string + map[i][0]);
+        int endIndex = prefix.offset + map[i][0].length();
+        if (endIndex > str.length()) {
+            return null;
+        }
+        if (str.substring(prefix.offset, endIndex).equals(map[i][0])) {
+            return new Record(endIndex, prefix.string + map[i][1]);
         }
         return null;
     }
@@ -92,7 +96,7 @@ public class AleparTranslit implements Translit {
 
     public static void main(String[] args) {
         Translit translit = new AleparTranslit();
-        System.out.println(translit.translate("лукьяненко"));
+        System.out.println(translit.translate("luk'yanenko"));
     }
 
 }

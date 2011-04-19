@@ -56,6 +56,15 @@ public class AleparTranslit implements Translit {
 
         while (!src.isEmpty()) {
             for (Record prefix : src) {
+                if (("" + str.charAt(prefix.offset)).matches("[^a-zA-Z]")) {
+                    Record next = new Record(prefix.offset + 1, prefix.string + str.charAt(prefix.offset));
+                    if (next.offset == str.length()) {
+                        result.add(next.string);
+                    } else {
+                        dst.add(next);
+                    }
+                    break;
+                }
                 for (int i = 0; i < map.length; i++) {
                     Record next = continues(str, prefix, i);
                     if (next != null) {
@@ -92,6 +101,11 @@ public class AleparTranslit implements Translit {
             this.offset = offset;
             this.string = string;
         }
+    }
+
+    public static void main(String[] args) {
+        Translit translit = new AleparTranslit();
+        System.out.println(translit.translate("lukyanenko~"));
     }
 
 }

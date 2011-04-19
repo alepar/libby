@@ -10,6 +10,8 @@ import ru.alepar.ebook.format.FormatProvider;
 import ru.alepar.ebook.format.StaticFormatProvider;
 import ru.alepar.ebook.format.UserAgentDetector;
 import ru.alepar.lib.index.*;
+import ru.alepar.lib.translit.AleparTranslit;
+import ru.alepar.lib.translit.Translit;
 import ru.alepar.lib.traum.FileFeeder;
 import ru.alepar.lib.traum.TraumBookInfoExtractor;
 import ru.alepar.lib.traum.TraumIndexer;
@@ -18,6 +20,7 @@ import ru.alepar.setting.Settings;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -30,6 +33,7 @@ public class AppHolder {
     private static final FormatProvider provider = new StaticFormatProvider();
     private static final Exec exec = new RuntimeExec();
     private static final UserAgentDetector detector = new UserAgentDetector();
+    private static final Translit translit = new AleparTranslit();
 
     private static BookIndex bookIndex;
     private static AuthorIndex authorIndex;
@@ -68,10 +72,10 @@ public class AppHolder {
     private static void instantiateIndexes() {
         IndexFactory indexFactory;
         if (settings.traumIndex() != null) {
-            log.info("storing index to {}", settings.traumIndex());
+            log.info("using index at {}", settings.traumIndex());
             indexFactory = new FSIndexFactory(settings.traumIndex());
         } else {
-            log.info("storing index to RAM");
+            log.info("using index in RAM");
             indexFactory = new RAMIndexFactory();
         }
 
@@ -81,8 +85,17 @@ public class AppHolder {
 
     public static Result query(String query) {
         try {
-            Set<Book> books = bookIndex.find(query);
-            Set<Author> authors = authorIndex.find(query);
+            Set<String> queries = new HashSet<String>();
+            queries.add(query);
+            queries.addAll(translit.translate(query));
+
+            Set<Book> books = new HashSet<Book>();
+            Set<Author> authors = new HashSet<Author>();
+
+            for (String q : queries) {
+                books.addAll(bookIndex.find(q));
+                authors.addAll(authorIndex.find(q));
+            }
             return new Result(
                     authors.toArray(new Author[authors.size()]),
                     books.toArray(new Book[books.size()])

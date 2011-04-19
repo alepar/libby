@@ -94,9 +94,4 @@ public class AleparTranslit implements Translit {
         }
     }
 
-    public static void main(String[] args) {
-        Translit translit = new AleparTranslit();
-        System.out.println(translit.translate("luk'yanenko"));
-    }
-
 }

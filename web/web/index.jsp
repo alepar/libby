@@ -1,6 +1,9 @@
 <%@ page import="ru.alepar.lib.model.Author" %>
 <%@ page import="ru.alepar.lib.model.Book" %>
+<%@ page import="ru.alepar.lib.model.Folder" %>
+<%@ page import="ru.alepar.lib.model.Item" %>
 <%@ page import="ru.alepar.web.AppHolder" %>
+<%@ page import="java.util.List" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 <html>
 <head>
@@ -16,23 +19,42 @@
 </form>
 
 <% String query = request.getParameter("query");
+    String path = request.getParameter("path");
+    List<Item> items = null;
     if (query != null) {
-        AppHolder.Result result = AppHolder.query(query); %>
+        items = AppHolder.query(query);
+    }
+    if (path != null) {
+        items = AppHolder.list(path);
+    }
+    if (items != null) {
+%>
 <table width="100%">
-    <% for (Author author : result.authors) { %>
+    <% for (Item item : items) { %>
+    <% if (item instanceof Author) {
+        Author author = (Author) item;%>
     <tr>
         <td><b><a href='?path=<%=author.path%>'><%=author.name%>
         </a></b></td>
     </tr>
     <% } %>
-    <% for (Book book : result.books) { %>
+    <% if (item instanceof Folder) {
+        Folder folder = (Folder) item;%>
+    <tr>
+        <td><a href='?path=<%=folder.path%>'><%=folder.name%>/
+        </a></td>
+    </tr>
+    <% } %>
+    <% if (item instanceof Book) {
+        Book book = (Book) item;%>
     <tr>
         <td><a href='get?<%=book.path%>'><%=book.seriesName != null ? book.seriesName + ": " : ""%><%=book.name%>
         </a></td>
     </tr>
     <% } %>
+    <% } %>
 </table>
-<% } %>
+<%} %>
 
 </body>
 </html>

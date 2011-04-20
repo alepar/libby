@@ -10,8 +10,11 @@ import ru.alepar.ebook.format.FormatProvider;
 import ru.alepar.ebook.format.StaticFormatProvider;
 import ru.alepar.ebook.format.UserAgentDetector;
 import ru.alepar.lib.index.*;
+import ru.alepar.lib.list.Lister;
+import ru.alepar.lib.list.TraumLister;
 import ru.alepar.lib.model.Author;
 import ru.alepar.lib.model.Book;
+import ru.alepar.lib.model.Item;
 import ru.alepar.lib.translit.AleparTranslit;
 import ru.alepar.lib.translit.Translit;
 import ru.alepar.lib.traum.FileFeeder;
@@ -21,10 +24,7 @@ import ru.alepar.setting.ResourceSettings;
 import ru.alepar.setting.Settings;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 public class AppHolder {
 
@@ -40,12 +40,14 @@ public class AppHolder {
     private static BookIndex bookIndex;
     private static AuthorIndex authorIndex;
     private static CalibreConverter converter;
+    private static Lister lister;
 
 
     static {
         try {
             log.info("traum.root = {}", settings.traumRoot());
 
+            lister = new TraumLister(new File(settings.traumRoot()), extractor);
             instantiateIndexes();
             reindex();
 
@@ -85,7 +87,7 @@ public class AppHolder {
         authorIndex = indexFactory.createAuthorIndex();
     }
 
-    public static Result query(String query) {
+    public static List<Item> query(String query) {
         try {
             Set<String> queries = new HashSet<String>();
             queries.add(query);
@@ -94,18 +96,23 @@ public class AppHolder {
             Set<Book> books = new HashSet<Book>();
             Set<Author> authors = new HashSet<Author>();
 
+
             for (String q : queries) {
-                books.addAll(bookIndex.find(q));
                 authors.addAll(authorIndex.find(q));
+                books.addAll(bookIndex.find(q));
             }
-            return new Result(
-                    authors.toArray(new Author[authors.size()]),
-                    books.toArray(new Book[books.size()])
-            );
+            List<Item> items = new LinkedList<Item>();
+            items.addAll(authors);
+            items.addAll(books);
+            return items;
         } catch (Exception e) {
             log.warn("query failed: " + query, e);
             throw new RuntimeException("query failed: " + query, e);
         }
+    }
+
+    public static List<Item> list(String path) {
+        return lister.list(path);
     }
 
     public static File convertFile(File in, EbookType type) {
@@ -126,16 +133,6 @@ public class AppHolder {
         }
         String nameWithoutExt = name.substring(0, name.indexOf("."));
         return String.format("%s.%s", nameWithoutExt, provider.extension(type));
-    }
-
-    public static class Result {
-        public final Author[] authors;
-        public final Book[] books;
-
-        public Result(Author[] authors, Book[] books) {
-            this.authors = authors;
-            this.books = books;
-        }
     }
 
 }

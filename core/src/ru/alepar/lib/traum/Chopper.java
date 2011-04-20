@@ -26,6 +26,9 @@ public class Chopper {
         } catch (IOException e) {
             throw new Oops(e);
         }
+        if (basePath.equals(path)) {
+            return ".";
+        }
         return path.substring(basePath.length() + offset);
 
     }

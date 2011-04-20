@@ -29,4 +29,11 @@ public class ChopperTest {
 
         assertThat(chopper.chop(new File("\\test\\ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip")), equalTo("ru\\Г\\Громов Борис\\Громов - Лубянская ласточка.fb2.zip"));
     }
+
+    @Test
+    public void chopsBasePathToDot() throws Exception {
+        Chopper chopper = new Chopper(new File("\\test"));
+
+        assertThat(chopper.chop(new File("\\test")), equalTo("."));
+    }
 }

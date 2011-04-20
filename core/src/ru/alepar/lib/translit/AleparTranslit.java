@@ -56,7 +56,7 @@ public class AleparTranslit implements Translit {
 
         while (!src.isEmpty()) {
             for (Record prefix : src) {
-                if (("" + str.charAt(prefix.offset)).matches("[^a-zA-Z]")) {
+                if (("" + str.charAt(prefix.offset)).matches("[^a-zA-Z']")) {
                     Record next = new Record(prefix.offset + 1, prefix.string + str.charAt(prefix.offset));
                     if (next.offset == str.length()) {
                         result.add(next.string);
@@ -101,11 +101,6 @@ public class AleparTranslit implements Translit {
             this.offset = offset;
             this.string = string;
         }
-    }
-
-    public static void main(String[] args) {
-        Translit translit = new AleparTranslit();
-        System.out.println(translit.translate("lukyanenko~"));
     }
 
 }

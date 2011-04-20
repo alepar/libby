@@ -15,36 +15,24 @@
     <input type="submit" value="go"/>
 </form>
 
-<%
-    String query = request.getParameter("query");
+<% String query = request.getParameter("query");
     if (query != null) {
-        AppHolder.Result result = AppHolder.query(query);
-        Author[] authors = result.authors;
-        Book[] books = result.books;
-        int max = Math.max(authors.length, books.length);
-%>
+        AppHolder.Result result = AppHolder.query(query); %>
 <table width="100%">
-    <th>Authors</th>
-    <th>Books</th>
-    <%
-        for (int i = 0; i < max; i++) {
-    %>
+    <% for (Author author : result.authors) { %>
     <tr>
-        <td><% if (i < authors.length) {
-            Author author = authors[i]; %> <a href='view?<%=author.path%>'><%=author.name%>
-        </a> <%} %></td>
-        <td><% if (i < books.length) {
-            Book book = books[i]; %> <a
-                href='get?<%=book.path%>'><%=book.seriesName != null ? book.seriesName + ": " : ""%><%=book.name%>
-        </a> <%} %></td>
+        <td><b><a href='?path=<%=author.path%>'><%=author.name%>
+        </a></b></td>
     </tr>
-    <%
-        }
-    %>
+    <% } %>
+    <% for (Book book : result.books) { %>
+    <tr>
+        <td><a href='get?<%=book.path%>'><%=book.seriesName != null ? book.seriesName + ": " : ""%><%=book.name%>
+        </a></td>
+    </tr>
+    <% } %>
 </table>
-<%
-    }
-%>
+<% } %>
 
 </body>
 </html>

@@ -10,6 +10,8 @@ import ru.alepar.ebook.format.FormatProvider;
 import ru.alepar.ebook.format.StaticFormatProvider;
 import ru.alepar.ebook.format.UserAgentDetector;
 import ru.alepar.lib.index.*;
+import ru.alepar.lib.model.Author;
+import ru.alepar.lib.model.Book;
 import ru.alepar.lib.translit.AleparTranslit;
 import ru.alepar.lib.translit.Translit;
 import ru.alepar.lib.traum.FileFeeder;

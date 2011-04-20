@@ -1,4 +1,4 @@
-package ru.alepar.lib.index;
+package ru.alepar.lib.model;
 
 public class Author implements Comparable<Author> {
 

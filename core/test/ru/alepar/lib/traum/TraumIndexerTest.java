@@ -6,9 +6,9 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import ru.alepar.lib.index.Author;
 import ru.alepar.lib.index.AuthorIndex;
 import ru.alepar.lib.index.BookIndex;
+import ru.alepar.lib.model.Author;
 
 import java.util.Arrays;
 import java.util.List;

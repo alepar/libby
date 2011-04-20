@@ -1,8 +1,8 @@
 package ru.alepar.lib.traum;
 
 import org.junit.Test;
-import ru.alepar.lib.index.Author;
-import ru.alepar.lib.index.Book;
+import ru.alepar.lib.model.Author;
+import ru.alepar.lib.model.Book;
 
 import java.io.File;
 

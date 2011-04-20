@@ -2,6 +2,7 @@ package ru.alepar.lib.index;
 
 import org.apache.lucene.store.RAMDirectory;
 import org.junit.Test;
+import ru.alepar.lib.model.Book;
 
 import java.util.Arrays;
 import java.util.Set;

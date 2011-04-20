@@ -1,6 +1,7 @@
 package ru.alepar.lib.index;
 
 import org.apache.lucene.queryParser.ParseException;
+import ru.alepar.lib.model.Author;
 
 import java.io.IOException;
 import java.util.Set;

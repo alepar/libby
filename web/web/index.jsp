@@ -1,5 +1,5 @@
-<%@ page import="ru.alepar.lib.index.Author" %>
-<%@ page import="ru.alepar.lib.index.Book" %>
+<%@ page import="ru.alepar.lib.model.Author" %>
+<%@ page import="ru.alepar.lib.model.Book" %>
 <%@ page import="ru.alepar.web.AppHolder" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 <html>

@@ -1,12 +1,11 @@
 package ru.alepar.lib.model;
 
-public class Author implements Comparable<Author> {
+public class Author extends Item implements Comparable<Author> {
 
-    public final String path;
     public final String name;
 
     public Author(String path, String name) {
-        this.path = path;
+        super(path);
         this.name = name;
     }
 

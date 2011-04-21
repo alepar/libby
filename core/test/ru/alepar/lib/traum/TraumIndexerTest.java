@@ -10,6 +10,7 @@ import ru.alepar.lib.index.AuthorIndex;
 import ru.alepar.lib.index.BookIndex;
 import ru.alepar.lib.model.Author;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,14 +26,14 @@ public class TraumIndexerTest {
         mockery.checking(new Expectations() {{
             ignoring(bookIndex);
 
-            allowing(authorIndex).addAuthor(new Author("ru\\Г\\Громов Александр\\", "Громов Александр"));
-            allowing(authorIndex).addAuthor(new Author("ru\\Г\\Громов Сергей\\", "Громов Сергей"));
-            allowing(authorIndex).addAuthor(new Author("ru\\Г\\Громов Алексей\\", "Громов Алексей"));
+            allowing(authorIndex).addAuthor(createAuthor("ru", "Г", "Громов Александр"));
+            allowing(authorIndex).addAuthor(createAuthor("ru", "Г", "Громов Сергей"));
+            allowing(authorIndex).addAuthor(createAuthor("ru", "Г", "Громов Алексей"));
         }});
         List<String> files = Arrays.asList(
-                "ru\\Г\\Громов Александр\\smth.fb2.zip",
-                "ru\\Г\\Громов Сергей\\smthelse.fb2.zip",
-                "ru\\Г\\Громов Алексей\\Геном\\smthelse.fb2.zip"
+                concatClean("ru", "Г", "Громов Александр", "smth.fb2.zip"),
+                concatClean("ru", "Г", "Громов Сергей", "smthelse.fb2.zip"),
+                concatClean("ru", "Г", "Громов Алексей", "Геном", "smthelse.fb2.zip")
         );
         TraumIndexer indexer = createIndexer(files);
         indexer.go();
@@ -40,5 +41,28 @@ public class TraumIndexerTest {
 
     private TraumIndexer createIndexer(List<String> files) {
         return new TraumIndexer(files, bookIndex, authorIndex, new TraumBookInfoExtractor());
+    }
+
+    private static Author createAuthor(String... names) {
+        return new Author(concat(names), names[names.length-1]);
+    }
+
+    private static String concat(String... names) {
+        StringBuilder result = new StringBuilder();
+        for (String name : names) {
+            result.append(name).append(File.separatorChar);
+        }
+        return result.toString();
+    }
+
+    private static String concatClean(String... names) {
+        StringBuilder result = new StringBuilder();
+        for (String name : names) {
+            if(result.length() > 0) {
+                result.append(File.separatorChar);
+            }
+            result.append(name);
+        }
+        return result.toString();
     }
 }

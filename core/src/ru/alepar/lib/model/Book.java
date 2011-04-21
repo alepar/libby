@@ -12,6 +12,11 @@ public class Book extends Item implements Comparable<Book> {
     }
 
     @Override
+    public void visit(ItemVisitor visitor) {
+        visitor.onBook(this);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

@@ -10,6 +10,11 @@ public class Folder extends Item implements Comparable<Folder> {
     }
 
     @Override
+    public void visit(ItemVisitor visitor) {
+        visitor.onFolder(this);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

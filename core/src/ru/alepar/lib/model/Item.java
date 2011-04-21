@@ -7,4 +7,6 @@ public abstract class Item {
     public Item(String path) {
         this.path = path;
     }
+
+    public abstract void visit(ItemVisitor visitor);
 }

@@ -12,4 +12,5 @@ public interface Index {
 
     List<String> find(String query) throws ParseException, IOException;
 
+    long size();
 }

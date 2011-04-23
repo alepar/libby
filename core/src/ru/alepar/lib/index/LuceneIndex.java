@@ -41,6 +41,19 @@ public class LuceneIndex implements Index {
     }
 
     @Override
+    public long size() {
+        try {
+            long totalSize = 0;
+            for (String file : dir.listAll()) {
+                totalSize += dir.fileLength(file);
+            }
+            return totalSize;
+        } catch (Exception e) {
+            throw new RuntimeException("failed to calculate dir size", e);
+        }
+    }
+
+    @Override
     public void addPath(String path, String indexWords, Double boost) throws IOException {
         Document doc = new Document();
 

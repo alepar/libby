@@ -33,6 +33,7 @@ import java.util.ResourceBundle;
     - move security stuff to FileSystem
     - replace File class with String in FileSystem interface  (TraumLister, FileFeeder)
 
+    - when page errors - send report
     - paged output
  */
 
@@ -64,6 +65,7 @@ public class AppHolder {
             instantiateIndexes();
             reindex();
 
+            log.info("index takes {}MiB", String.format("%.2f", index.size() / 1024.0 / 1024.0));
             querier = new Querier(index, storage);
         } catch (Exception e) {
             log.error("failed to bring up libby, terminating", e);

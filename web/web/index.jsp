@@ -3,7 +3,6 @@
 <%@ page import="ru.alepar.lib.model.Folder" %>
 <%@ page import="ru.alepar.lib.model.Item" %>
 <%@ page import="ru.alepar.web.AppHolder" %>
-<%@ page import="java.util.List" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 <html>
 <head>
@@ -20,7 +19,7 @@
 
 <% String query = request.getParameter("query");
     String path = request.getParameter("path");
-    List<Item> items = null;
+    Iterable<Item> items = null;
     if (query != null) {
         items = AppHolder.query(query);
     }
@@ -48,7 +47,7 @@
     <% if (item instanceof Book) {
         Book book = (Book) item;%>
     <tr>
-        <td><a href='get?<%=book.path%>'><%=book.seriesName != null ? book.seriesName + ": " : ""%><%=book.name%>
+        <td><a href='get?<%=book.path%>'><%=book.name%>
         </a></td>
     </tr>
     <% } %>

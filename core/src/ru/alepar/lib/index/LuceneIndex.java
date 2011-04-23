@@ -23,7 +23,7 @@ import java.util.TreeSet;
 public class LuceneIndex implements Index {
 
     private static final Version LUCENE_VERSION = Version.LUCENE_31;
-    protected static final int QUERY_LIMIT = 10;
+    protected static final int QUERY_LIMIT = 20;
 
     private final Analyzer analyzer = new StandardAnalyzer(LUCENE_VERSION);
     private final IndexWriter writer;

@@ -26,10 +26,11 @@
 <% String query = request.getParameter("query");
     String path = request.getParameter("path");
     Iterable<Item> items = null;
-    if (query != null) {
+
+    if (query != null && !query.isEmpty()) {
         items = AppHolder.query(query);
     }
-    if (path != null) {
+    if (path != null && !path.isEmpty()) {
         items = AppHolder.list(path);
     }
     if (items != null) {

@@ -39,7 +39,7 @@ public class FileFeeder implements Iterable<String> {
             String path = fileStack.pop();
             if (fs.isDirectory(path)) {
                 for (String childName : fs.listFiles(path)) {
-                    fileStack.push(fs.create(path, childName));
+                    fileStack.push(childName);
                 }
             }
             return path;

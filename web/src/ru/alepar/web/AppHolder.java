@@ -76,7 +76,7 @@ public class AppHolder {
         if (settings.traumReindex()) {
             log.info("reindexing");
             Date start = new Date();
-            Iterable<String> feeder = new FileFeeder(settings.traumRoot(), fs);
+            Iterable<String> feeder = new FileFeeder(".", fs);
             TraumIndexer indexer = new TraumIndexer(feeder, storage, new ItemIndexer(index));
             indexer.go();
             Date end = new Date();

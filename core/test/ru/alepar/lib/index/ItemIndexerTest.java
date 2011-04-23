@@ -123,5 +123,34 @@ public class ItemIndexerTest {
         indexer.onBook(new Book(path, bookName));
     }
 
+    @Test
+    public void dealsFineWhenBookNameContainsDots() throws Exception {
+        String bookName = "Горин - ...Чума на оба ваши дома!";
+        final String path = createPath("ru", "Г", "Горин Григорий", bookName + ".fb2.zip");
+
+        mockery.checking(new Expectations() {{
+            ignoring(index);
+        }});
+
+        indexer.onBook(new Book(path, bookName));
+        //just check that no exceptions are thrown
+    }
+
+    @Test
+    public void addsToIndexPartOfBookNameWhichComesAfterDot() throws Exception {
+        String author = "Лукьяненко Сергей";
+        final String series = "Геном";
+        String bookName = "Танцы .на снегу";
+        final String path = createPath("ru", "Л", author, series, bookName + ".fb2.zip");
+
+        mockery.checking(new Expectations() {{
+            one(index).addPath(with(equalTo(path)), with(
+                    hasSubstrings("Танцы", "на", "снегу")
+            ));
+        }});
+
+        indexer.onBook(new Book(path, bookName));
+    }
+
 
 }

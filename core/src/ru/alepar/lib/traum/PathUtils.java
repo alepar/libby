@@ -13,7 +13,7 @@ public class PathUtils {
     }
 
     public static String chopOffExtension(String fileName) {
-        return fileName.substring(0, fileName.indexOf('.'));
+        return fileName.replaceAll("^(.*?)((\\.[a-z]{1,4}){1,2})$", "$1");
     }
 
     public static String chopOffAuthor(String bookName, String author) {

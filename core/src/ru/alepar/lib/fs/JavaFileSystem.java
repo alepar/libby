@@ -32,16 +32,20 @@ public class JavaFileSystem implements FileSystem {
 
     @Override
     public String getName(String path) {
+        checkPath(path);
         return make(path).getName();
     }
 
     @Override
     public boolean isDirectory(String path) {
+        checkPath(path);
         return make(path).isDirectory();
     }
 
     @Override
     public String[] listFiles(String path) {
+        checkPath(path);
+
         File[] files = make(path).listFiles();
         String[] names = new String[files.length];
 
@@ -54,6 +58,7 @@ public class JavaFileSystem implements FileSystem {
 
     @Override
     public boolean isFile(String path) {
+        checkPath(path);
         return make(path).isFile();
     }
 
@@ -64,5 +69,11 @@ public class JavaFileSystem implements FileSystem {
 
     private File make(String path) {
         return new File(basePath, path);
+    }
+
+    private void checkPath(String path) {
+        if (!exists(path)) {
+            throw new IllegalArgumentException("path doesnot exists, path = " + path);
+        }
     }
 }

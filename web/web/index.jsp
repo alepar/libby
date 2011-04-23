@@ -10,12 +10,18 @@
     <meta equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-<div align="right"><%=AppHolder.detect(request.getHeader("User-Agent"))%>
-</div>
-<form action="" method="get">
-    <input type="text" name="query"/>
-    <input type="submit" value="go"/> <a href="about.jsp">?</a>
-</form>
+
+<table width="100%">
+    <tr>
+        <td align="left">
+            <form action="" method="get">
+                <input type="text" name="query"/><input type="submit" value="go"/><a href="about.jsp">?</a>
+            </form>
+        </td>
+        <td align="right"><%=AppHolder.detect(request.getHeader("User-Agent"))%>
+        </td>
+    </tr>
+</table>
 
 <% String query = request.getParameter("query");
     String path = request.getParameter("path");

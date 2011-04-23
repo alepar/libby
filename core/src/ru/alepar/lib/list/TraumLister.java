@@ -3,45 +3,50 @@ package ru.alepar.lib.list;
 import ru.alepar.lib.model.Folder;
 import ru.alepar.lib.model.Item;
 import ru.alepar.lib.traum.Chopper;
+import ru.alepar.lib.traum.FileSystem;
 import ru.alepar.lib.traum.ItemStorage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class TraumLister implements Lister {
 
+    private final FileSystem fs;
     private final File root;
     private final ItemStorage extractor;
     private final Chopper chopper;
 
-    public TraumLister(File root, ItemStorage extractor) {
+    public TraumLister(File root, ItemStorage extractor, FileSystem fs) {
         this.root = root;
         this.extractor = extractor;
+        this.fs = fs;
         this.chopper = new Chopper(root);
     }
 
     @Override
     public List<Item> list(String path) {
         try {
-            File pathToList = new File(root, path);
+            File pathToList = fs.createFile(path);
             securityCheck(pathToList);
 
-            if (!pathToList.exists()) {
+            if (!fs.exists(pathToList)) {
                 throw new RuntimeException("path does not exist");
             }
-            if (!pathToList.isDirectory()) {
+            if (!fs.isDirectory(pathToList)) {
                 throw new RuntimeException("path is not a directory");
             }
 
-            SortedSet<Item> folders = new TreeSet<Item>();
+            SortedSet<Item> folders = new TreeSet<Item>(new Comparator<Item>() {
+                @Override
+                public int compare(Item o1, Item o2) {
+                    return o1.path.compareTo(o2.path);
+                }
+            });
             SortedSet<Item> books = new TreeSet<Item>();
 
             try {
-                File parentFolder = new File(pathToList, "..");
+                File parentFolder = fs.createFile(path + File.separatorChar + "..");
                 securityCheck(parentFolder);
 
                 folders.add(new Folder(chopper.chop(parentFolder), ".."));
@@ -49,12 +54,12 @@ public class TraumLister implements Lister {
                 //ignored
             }
 
-            for (File file : pathToList.listFiles()) {
+            for (File file : fs.listFiles(pathToList)) {
                 String relativePath = chopper.chop(file);
-                if (file.isDirectory()) {
+                if (fs.isDirectory(file)) {
                     folders.add(extractor.get(relativePath));
                 }
-                if (file.isFile()) {
+                if (fs.isFile(file)) {
                     books.add(extractor.get(relativePath));
                 }
             }

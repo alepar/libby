@@ -19,10 +19,10 @@ public class Folder extends Item implements Comparable<Folder> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Folder author = (Folder) o;
+        Folder folder = (Folder) o;
 
-        if (name != null ? !name.equals(author.name) : author.name != null) return false;
-        if (path != null ? !path.equals(author.path) : author.path != null) return false;
+        if (name != null ? !name.equals(folder.name) : folder.name != null) return false;
+        if (path != null ? !path.equals(folder.path) : folder.path != null) return false;
 
         return true;
     }

@@ -43,8 +43,9 @@ public class AppHolder {
             log.info("traum.root = {}", settings.traumRoot());
             File basePath = new File(settings.traumRoot());
 
-            storage = new FileSystemStorage(new JavaFileSystem(basePath));
-            lister = new TraumLister(basePath, storage);
+            JavaFileSystem fs = new JavaFileSystem(basePath);
+            storage = new FileSystemStorage(fs);
+            lister = new TraumLister(basePath, storage, fs);
 
             instantiateIndexes();
             reindex();

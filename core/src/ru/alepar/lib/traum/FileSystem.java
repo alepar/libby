@@ -3,11 +3,15 @@ package ru.alepar.lib.traum;
 import java.io.File;
 
 public interface FileSystem {
-    boolean exists(File curFile);
+    boolean exists(File file);
 
-    String getName(File curFile);
+    String getName(File file);
 
-    boolean isDirectory(File curFile);
+    boolean isDirectory(File file);
 
     File createFile(String path);
+
+    File[] listFiles(File file);
+
+    boolean isFile(File file);
 }

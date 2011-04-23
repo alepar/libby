@@ -11,18 +11,18 @@ public class JavaFileSystem implements FileSystem {
     }
 
     @Override
-    public boolean exists(File curFile) {
-        return curFile.exists();
+    public boolean exists(File file) {
+        return file.exists();
     }
 
     @Override
-    public String getName(File curFile) {
-        return curFile.getName();
+    public String getName(File file) {
+        return file.getName();
     }
 
     @Override
-    public boolean isDirectory(File curFile) {
-        return curFile.isDirectory();
+    public boolean isDirectory(File file) {
+        return file.isDirectory();
     }
 
     @Override
@@ -30,4 +30,13 @@ public class JavaFileSystem implements FileSystem {
         return new File(basePath, path);
     }
 
+    @Override
+    public File[] listFiles(File file) {
+        return file.listFiles();
+    }
+
+    @Override
+    public boolean isFile(File file) {
+        return file.isFile();
+    }
 }

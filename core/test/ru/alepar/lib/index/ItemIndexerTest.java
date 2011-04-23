@@ -82,13 +82,13 @@ public class ItemIndexerTest {
     }
 
     @Test
-    public void excludesAuthorNameFromBookIndex() throws Exception {
+    public void includesAuthorNameInBookIndex() throws Exception {
         String author = "Лукьяненко Сергей";
         String bookName = "Лукьяненко - Геном";
         final String path = createPath("ru", "Л", author, bookName + ".fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(not(hasWords("Лукьяненко"))), with(any(Double.class)));
+            one(index).addPath(with(equalTo(path)), with(hasWords("Лукьяненко")), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -131,7 +131,7 @@ public class ItemIndexerTest {
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(allOf(
                     hasWords(series),
-                    not(hasWords("Лукьяненко"))
+                    hasWords("Лукьяненко")
             )), with(any(Double.class)));
         }});
 

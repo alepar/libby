@@ -28,9 +28,8 @@ import java.util.ResourceBundle;
 
 // TODO wishlist
 /*
-    - sort authors (amount of boost?) based on number of books author has
-
     - security tests for JavaFileSystem
+    - counter tests for ItemIndexer (bigger author goes first, query with author and bookname gets book as first result, not overboosted author)
 
     - when page errors - send report
     - paged output
@@ -77,7 +76,7 @@ public class AppHolder {
             log.info("reindexing");
             Date start = new Date();
             Iterable<String> feeder = new FileFeeder(".", fs);
-            TraumIndexer indexer = new TraumIndexer(feeder, storage, new ItemIndexer(index));
+            TraumIndexer indexer = new TraumIndexer(feeder, storage, new ItemIndexer(index, new FileSystemFileCounter(fs)));
             indexer.go();
             Date end = new Date();
             log.info("reindex took {}s, added {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());

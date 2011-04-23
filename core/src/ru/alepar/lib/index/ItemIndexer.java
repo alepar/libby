@@ -12,11 +12,15 @@ import static ru.alepar.lib.traum.PathUtils.*;
 
 public class ItemIndexer implements ItemVisitor {
 
-    private static final double AUTHOR_BOOST = 1.2;
-    private final Index index;
+    private static final double AUTHOR_BOOST = 1.;
+    private static final double BOOK_DIVIDER = 30.0;
 
-    public ItemIndexer(Index index) {
+    private final Index index;
+    private final FileCounter counter;
+
+    public ItemIndexer(Index index, FileCounter counter) {
         this.index = index;
+        this.counter = counter;
     }
 
     @Override
@@ -42,7 +46,8 @@ public class ItemIndexer implements ItemVisitor {
     @Override
     public void onAuthor(Author author) {
         try {
-            index.addPath(author.path, author.name, AUTHOR_BOOST);
+            int count = counter.count(author.path);
+            index.addPath(author.path, author.name, AUTHOR_BOOST + count / BOOK_DIVIDER);
         } catch (Exception e) {
             throw new RuntimeException("failed to add author to index", e);
         }

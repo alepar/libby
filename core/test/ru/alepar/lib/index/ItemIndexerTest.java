@@ -19,7 +19,9 @@ public class ItemIndexerTest {
     private final Mockery mockery = new JUnit4Mockery();
 
     private final Index index = mockery.mock(Index.class);
-    private final ItemIndexer indexer = new ItemIndexer(index);
+    private final FileCounter counter = mockery.mock(FileCounter.class);
+
+    private final ItemIndexer indexer = new ItemIndexer(index, counter);
 
     @Test
     public void bookGetsIndexedByItsName() throws Exception {
@@ -116,6 +118,9 @@ public class ItemIndexerTest {
             one(index).addPath(with(equalTo(path)), with(hasWords(
                     "Лукьяненко", "Сергей"
             )), with(any(Double.class)));
+
+            allowing(counter).count(with(any(String.class)));
+            will(returnValue(0));
         }});
 
         indexer.onAuthor(new Author(path, author));

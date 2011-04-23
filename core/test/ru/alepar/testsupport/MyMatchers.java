@@ -12,4 +12,8 @@ public class MyMatchers {
         return new StringRegexpMatcher(regexp);
     }
 
+    public static Matcher<String> hasSubstrings(String... substrings) {
+        return new HasSubstringsMatcher(substrings);
+    }
+
 }

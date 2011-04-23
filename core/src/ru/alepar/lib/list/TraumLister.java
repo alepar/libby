@@ -1,10 +1,9 @@
 package ru.alepar.lib.list;
 
-import ru.alepar.lib.model.Book;
 import ru.alepar.lib.model.Folder;
 import ru.alepar.lib.model.Item;
 import ru.alepar.lib.traum.Chopper;
-import ru.alepar.lib.traum.TraumBookInfoExtractor;
+import ru.alepar.lib.traum.ItemStorage;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +15,10 @@ import java.util.TreeSet;
 public class TraumLister implements Lister {
 
     private final File root;
-    private final TraumBookInfoExtractor extractor;
+    private final ItemStorage extractor;
     private final Chopper chopper;
 
-    public TraumLister(File root, TraumBookInfoExtractor extractor) {
+    public TraumLister(File root, ItemStorage extractor) {
         this.root = root;
         this.extractor = extractor;
         this.chopper = new Chopper(root);
@@ -38,8 +37,8 @@ public class TraumLister implements Lister {
                 throw new RuntimeException("path is not a directory");
             }
 
-            SortedSet<Folder> folders = new TreeSet<Folder>();
-            SortedSet<Book> books = new TreeSet<Book>();
+            SortedSet<Item> folders = new TreeSet<Item>();
+            SortedSet<Item> books = new TreeSet<Item>();
 
             try {
                 File parentFolder = new File(pathToList, "..");
@@ -53,11 +52,10 @@ public class TraumLister implements Lister {
             for (File file : pathToList.listFiles()) {
                 String relativePath = chopper.chop(file);
                 if (file.isDirectory()) {
-                    folders.add(new Folder(relativePath, file.getName()));
+                    folders.add(extractor.get(relativePath));
                 }
                 if (file.isFile()) {
-                    TraumBookInfoExtractor.Info info = extractor.extract(relativePath);
-                    books.add(info.book);
+                    books.add(extractor.get(relativePath));
                 }
             }
 

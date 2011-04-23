@@ -12,14 +12,10 @@ import ru.alepar.ebook.format.UserAgentDetector;
 import ru.alepar.lib.index.*;
 import ru.alepar.lib.list.Lister;
 import ru.alepar.lib.list.TraumLister;
-import ru.alepar.lib.model.Author;
-import ru.alepar.lib.model.Book;
 import ru.alepar.lib.model.Item;
 import ru.alepar.lib.translit.AleparTranslit;
 import ru.alepar.lib.translit.Translit;
-import ru.alepar.lib.traum.FileFeeder;
-import ru.alepar.lib.traum.TraumBookInfoExtractor;
-import ru.alepar.lib.traum.TraumIndexer;
+import ru.alepar.lib.traum.*;
 import ru.alepar.setting.ResourceSettings;
 import ru.alepar.setting.Settings;
 
@@ -30,15 +26,14 @@ public class AppHolder {
 
     private static final Logger log = LoggerFactory.getLogger(AppHolder.class);
 
-    private static final TraumBookInfoExtractor extractor = new TraumBookInfoExtractor();
     private static final Settings settings = new ResourceSettings(ResourceBundle.getBundle("/libby"));
     private static final FormatProvider provider = new StaticFormatProvider();
     private static final Exec exec = new RuntimeExec();
     private static final UserAgentDetector detector = new UserAgentDetector();
     private static final Translit translit = new AleparTranslit();
 
-    private static BookIndex bookIndex;
-    private static AuthorIndex authorIndex;
+    private static ItemStorage storage;
+    private static Index index;
     private static CalibreConverter converter;
     private static Lister lister;
 
@@ -46,8 +41,11 @@ public class AppHolder {
     static {
         try {
             log.info("traum.root = {}", settings.traumRoot());
+            File basePath = new File(settings.traumRoot());
 
-            lister = new TraumLister(new File(settings.traumRoot()), extractor);
+            storage = new FileSystemStorage(new JavaFileSystem(basePath));
+            lister = new TraumLister(basePath, storage);
+
             instantiateIndexes();
             reindex();
 
@@ -64,7 +62,7 @@ public class AppHolder {
             log.info("reindexing");
             Date start = new Date();
             Iterable<String> feeder = new FileFeeder(new File(settings.traumRoot()));
-            TraumIndexer indexer = new TraumIndexer(feeder, bookIndex, authorIndex, extractor);
+            TraumIndexer indexer = new TraumIndexer(feeder, storage, new ItemIndexer(index));
             indexer.go();
             Date end = new Date();
             log.info("reindex took {}s, added {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());
@@ -83,27 +81,24 @@ public class AppHolder {
             indexFactory = new RAMIndexFactory();
         }
 
-        bookIndex = indexFactory.createBookIndex();
-        authorIndex = indexFactory.createAuthorIndex();
+        index = indexFactory.createIndex();
     }
 
-    public static List<Item> query(String query) {
+    public static Iterable<Item> query(String query) {
         try {
             Set<String> queries = new HashSet<String>();
             queries.add(query);
             queries.addAll(translit.translate(query));
 
-            Set<Book> books = new HashSet<Book>();
-            Set<Author> authors = new HashSet<Author>();
-
-
+            SortedSet<String> paths = new TreeSet<String>();
             for (String q : queries) {
-                authors.addAll(authorIndex.find(q));
-                books.addAll(bookIndex.find(q));
+                paths.addAll(index.find(q));
             }
-            List<Item> items = new LinkedList<Item>();
-            items.addAll(authors);
-            items.addAll(books);
+
+            List<Item> items = new ArrayList<Item>(paths.size());
+            for (String path : paths) {
+                items.add(storage.get(path));
+            }
             return items;
         } catch (Exception e) {
             log.warn("query failed: " + query, e);

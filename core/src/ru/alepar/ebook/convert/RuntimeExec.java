@@ -40,7 +40,7 @@ public class RuntimeExec implements Exec {
             try {
                 while (is.read() != -1) ;
             } catch (Exception e) {
-                //TODO throw in parent thread
+                //shuda rethrow in parent thread
             }
         }
     }

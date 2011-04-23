@@ -6,6 +6,7 @@ import ru.alepar.lib.stuff.Oops;
 import java.io.File;
 
 public class FSIndexFactory implements IndexFactory {
+
     private final File basePath;
 
     public FSIndexFactory(String path) {
@@ -13,20 +14,12 @@ public class FSIndexFactory implements IndexFactory {
     }
 
     @Override
-    public BookIndex createBookIndex() {
+    public Index createIndex() {
         try {
-            return new LuceneBookIndex(FSDirectory.open(new File(basePath, "books")));
+            return new LuceneIndex(FSDirectory.open(new File(basePath, "books")));
         } catch (Exception e) {
             throw new Oops(e);
         }
     }
 
-    @Override
-    public AuthorIndex createAuthorIndex() {
-        try {
-            return new LuceneAuthorIndex(FSDirectory.open(new File(basePath, "authors")));
-        } catch (Exception e) {
-            throw new Oops(e);
-        }
-    }
 }

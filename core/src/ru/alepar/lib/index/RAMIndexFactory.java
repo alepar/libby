@@ -5,12 +5,8 @@ import org.apache.lucene.store.RAMDirectory;
 public class RAMIndexFactory implements IndexFactory {
 
     @Override
-    public BookIndex createBookIndex() {
-        return new LuceneBookIndex(new RAMDirectory());
+    public Index createIndex() {
+        return new LuceneIndex(new RAMDirectory());
     }
 
-    @Override
-    public AuthorIndex createAuthorIndex() {
-        return new LuceneAuthorIndex(new RAMDirectory());
-    }
 }

@@ -32,26 +32,18 @@ public class FileFeeder implements Iterable<String> {
 
         @Override
         public boolean hasNext() {
-            drillDown();
             return !fileStack.isEmpty();
-        }
-
-        private void drillDown() {
-            while (fileStack.peek() != null && !fileStack.peek().isFile()) {
-                if (fileStack.isEmpty()) {
-                    return;
-                }
-                File dir = fileStack.pop();
-                for (String childName : dir.list()) {
-                    fileStack.push(new File(dir, childName));
-                }
-            }
         }
 
         @Override
         public String next() {
-            drillDown();
-            return chopper.chop(fileStack.pop());
+            File fileOnTop = fileStack.pop();
+            if (fileOnTop.isDirectory()) {
+                for (String childName : fileOnTop.list()) {
+                    fileStack.push(new File(fileOnTop, childName));
+                }
+            }
+            return chopper.chop(fileOnTop);
         }
 
         @Override

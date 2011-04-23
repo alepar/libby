@@ -12,6 +12,7 @@ import static ru.alepar.lib.traum.PathUtils.*;
 
 public class ItemIndexer implements ItemVisitor {
 
+    private static final double AUTHOR_BOOST = 1.2;
     private final Index index;
 
     public ItemIndexer(Index index) {
@@ -41,7 +42,7 @@ public class ItemIndexer implements ItemVisitor {
     @Override
     public void onAuthor(Author author) {
         try {
-            index.addPath(author.path, author.name, null);
+            index.addPath(author.path, author.name, AUTHOR_BOOST);
         } catch (Exception e) {
             throw new RuntimeException("failed to add author to index", e);
         }

@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 
 // TODO wishlist
 /*
-    - authors get boost when indexed
     - sort authors (amount of boost?) based on number of books author has
     - series output format
 

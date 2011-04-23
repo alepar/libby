@@ -51,6 +51,9 @@ public class AppHolder {
     private static Querier querier;
     private static JavaFileSystem fs;
 
+    private static long indexTime;
+    private static int indexCount;
+    private static double indexSize;
 
     static {
         try {
@@ -63,7 +66,8 @@ public class AppHolder {
             instantiateIndexes();
             reindex();
 
-            log.info("index takes {}MiB", String.format("%.2f", index.size() / 1024.0 / 1024.0));
+            indexSize = index.size() / 1024.0 / 1024.0;
+            log.info("index takes {}MiB", String.format("%.2f", indexSize));
             querier = new Querier(index, storage);
         } catch (Exception e) {
             log.error("failed to bring up libby, terminating", e);
@@ -79,7 +83,9 @@ public class AppHolder {
             TraumIndexer indexer = new TraumIndexer(feeder, storage, new ItemIndexer(index, new FileSystemFileCounter(fs)));
             indexer.go();
             Date end = new Date();
-            log.info("reindex took {}s, added {} files", (end.getTime() - start.getTime()) / 1000, indexer.getCounter());
+            indexTime = (end.getTime() - start.getTime()) / 1000;
+            indexCount = indexer.getCounter();
+            log.info("reindex took {}s, added {} files", indexTime, indexCount);
         } else {
             log.warn("skipping reindex");
         }
@@ -126,4 +132,7 @@ public class AppHolder {
         return String.format("%s.%s", nameWithoutExt, provider.extension(type));
     }
 
+    public static String status() {
+        return String.format("Index takes %.2fMiB, contains %d files (took %dsec to index)", indexSize, indexCount, indexTime);
+    }
 }

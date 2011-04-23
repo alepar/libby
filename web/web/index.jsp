@@ -14,7 +14,7 @@
 </div>
 <form action="" method="get">
     <input type="text" name="query"/>
-    <input type="submit" value="go"/>
+    <input type="submit" value="go"/> <a href="about.jsp">?</a>
 </form>
 
 <% String query = request.getParameter("query");

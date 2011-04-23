@@ -14,7 +14,7 @@ import java.io.File;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static ru.alepar.testsupport.MyMatchers.hasSubstrings;
+import static ru.alepar.testsupport.MyMatchers.hasWords;
 
 @RunWith(JMock.class)
 public class FileSystemStorageTest {
@@ -148,7 +148,7 @@ public class FileSystemStorageTest {
         }});
 
         Book item = (Book) extractor.get(path);
-        assertThat(item.name, hasSubstrings(seriesName));
+        assertThat(item.name, hasWords(seriesName));
     }
 
 }

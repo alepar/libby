@@ -33,7 +33,7 @@ public class PathUtils {
         for (String word : authorSplit) {
             choppingPart = chopOffWord(choppingPart, word);
         }
-        return choppingPart + staticPart;
+        return choppingPart + " " + staticPart;
     }
 
     public static String chopOffWord(String source, String word) {

@@ -3,11 +3,13 @@ package ru.alepar.testsupport;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-public class HasSubstringsMatcher extends BaseMatcher<String> {
+import static java.util.regex.Pattern.quote;
+
+public class HasWordsMatcher extends BaseMatcher<String> {
 
     private final String[] substrings;
 
-    public HasSubstringsMatcher(String... substrings) {
+    public HasWordsMatcher(String... substrings) {
         this.substrings = substrings;
     }
 
@@ -23,7 +25,7 @@ public class HasSubstringsMatcher extends BaseMatcher<String> {
         String str = (String) o;
 
         for (String substring : substrings) {
-            if (!str.contains(substring)) {
+            if (!str.matches(".*(^|[^a-zA-Zа-яА-Я0-9])" + quote(substring) + "([^a-zA-Zа-яА-Я0-9]|$).*")) {
                 return false;
             }
         }
@@ -33,8 +35,9 @@ public class HasSubstringsMatcher extends BaseMatcher<String> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("string with following substrings ");
+        description.appendText("string with following substrings");
         for (String substring : substrings) {
+            description.appendText(" ");
             description.appendValue(substring);
         }
     }

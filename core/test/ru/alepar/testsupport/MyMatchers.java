@@ -12,8 +12,8 @@ public class MyMatchers {
         return new StringRegexpMatcher(regexp);
     }
 
-    public static Matcher<String> hasSubstrings(String... substrings) {
-        return new HasSubstringsMatcher(substrings);
+    public static Matcher<String> hasWords(String... words) {
+        return new HasWordsMatcher(words);
     }
 
 }

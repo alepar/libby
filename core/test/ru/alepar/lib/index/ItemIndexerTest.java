@@ -11,7 +11,7 @@ import ru.alepar.lib.model.Book;
 
 import static org.hamcrest.Matchers.*;
 import static ru.alepar.lib.traum.PathUtils.createPath;
-import static ru.alepar.testsupport.MyMatchers.hasSubstrings;
+import static ru.alepar.testsupport.MyMatchers.hasWords;
 
 @RunWith(JMock.class)
 public class ItemIndexerTest {
@@ -28,7 +28,7 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "Л", author, bookName + ".fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(hasSubstrings(
+            one(index).addPath(with(equalTo(path)), with(hasWords(
                     "Геном"
             )));
         }});
@@ -44,8 +44,23 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "Л", author, series, bookName + ".fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(hasSubstrings(
+            one(index).addPath(with(equalTo(path)), with(hasWords(
                     series
+            )));
+        }});
+
+        indexer.onBook(new Book(path, bookName));
+    }
+
+    @Test
+    public void bookGetsIndexedByCoAuthor() throws Exception {
+        String author = "Лукьяненко Сергей";
+        String bookName = "Лукьяненко, Перумов - Не время для драконов";
+        final String path = createPath("ru", "Л", author, bookName + ".fb2.zip");
+
+        mockery.checking(new Expectations() {{
+            one(index).addPath(with(equalTo(path)), with(hasWords(
+                    "Перумов"
             )));
         }});
 
@@ -58,7 +73,7 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "_", "_периодика", "Журнал PC Magazine", bookName);
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(hasSubstrings(
+            one(index).addPath(with(equalTo(path)), with(hasWords(
                     "ru", "периодика", "Журнал", "PC", "Magazine", "RE", "01", "2009"
             )));
         }});
@@ -73,7 +88,7 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "Л", author, bookName + ".fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(not(hasSubstrings("Лукьяненко"))));
+            one(index).addPath(with(equalTo(path)), with(not(hasWords("Лукьяненко"))));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -86,7 +101,7 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "Л", author, bookName + ".fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(hasSubstrings("Сергей")));
+            one(index).addPath(with(equalTo(path)), with(hasWords("Сергей")));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -98,7 +113,7 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "Л", author);
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(hasSubstrings(
+            one(index).addPath(with(equalTo(path)), with(hasWords(
                     "Лукьяненко", "Сергей"
             )));
         }});
@@ -115,8 +130,8 @@ public class ItemIndexerTest {
 
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(allOf(
-                    hasSubstrings(series),
-                    not(hasSubstrings("Лукьяненко"))
+                    hasWords(series),
+                    not(hasWords("Лукьяненко"))
             )));
         }});
 
@@ -145,7 +160,7 @@ public class ItemIndexerTest {
 
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(
-                    hasSubstrings("Танцы", "на", "снегу")
+                    hasWords("Танцы", "на", "снегу")
             ));
         }});
 

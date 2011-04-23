@@ -47,10 +47,14 @@ public class FileSystemStorage implements ItemStorage {
         }
 
         if (split.length == 5) {
-            return new Book(path, split[3] + ": " + fileNameWithoutExtension);
+            return new Book(path, makeBooknameWithSeries(split[3], fileNameWithoutExtension));
         }
 
         throw new IllegalArgumentException("doesnt look like traum path: " + path);
+    }
+
+    private static String makeBooknameWithSeries(String series, String bookName) {
+        return bookName.replaceFirst("^([^\\d]+)\\s(.*)$", "$1 - " + series + " $2");
     }
 
 }

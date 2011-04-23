@@ -29,7 +29,6 @@ import java.util.ResourceBundle;
 // TODO wishlist
 /*
     - sort authors (amount of boost?) based on number of books author has
-    - series output format
 
     - move security stuff to FileSystem
     - replace File class with String in FileSystem interface  (TraumLister, FileFeeder)

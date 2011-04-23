@@ -127,7 +127,7 @@ public class FileSystemStorageTest {
     @Test
     public void bookFilePathWithSeriesInItWillReturnBookWithSeriesInItsName() throws Exception {
         String author = "Лукьяненко Сергей";
-        String bookName = "Калеки";
+        String bookName = "Лукьяненко 3 Калеки";
         String seriesName = "Геном";
         final String fileName = bookName + ".fb2.zip";
         final String path = PathUtils.createPath("ru", "Л", author, seriesName, fileName);

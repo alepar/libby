@@ -106,5 +106,22 @@ public class ItemIndexerTest {
         indexer.onAuthor(new Author(path, author));
     }
 
+    @Test
+    public void dealsFineWhenBookNameDoesNotContainDashes() throws Exception {
+        String author = "Лукьяненко Сергей";
+        final String series = "Геном";
+        String bookName = "Лукьяненко 1 Танцы на снегу";
+        final String path = createPath("ru", "Л", author, series, bookName + ".fb2.zip");
+
+        mockery.checking(new Expectations() {{
+            one(index).addPath(with(equalTo(path)), with(allOf(
+                    hasSubstrings(series),
+                    not(hasSubstrings("Лукьяненко"))
+            )));
+        }});
+
+        indexer.onBook(new Book(path, bookName));
+    }
+
 
 }

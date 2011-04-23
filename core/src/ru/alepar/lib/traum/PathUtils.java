@@ -17,12 +17,23 @@ public class PathUtils {
     }
 
     public static String chopOffAuthor(String bookName, String author) {
-        String[] bookSplit = bookName.split(" - ");
+        String choppingPart;
+        String staticPart;
+
+        if (bookName.contains(" - ")) {
+            String[] bookSplit = bookName.split(" - ");
+            choppingPart = bookSplit[0];
+            staticPart = bookSplit[1];
+        } else {
+            choppingPart = bookName;
+            staticPart = "";
+        }
+
         String[] authorSplit = author.split(" ");
         for (String word : authorSplit) {
-            bookSplit[0] = chopOffWord(bookSplit[0], word);
+            choppingPart = chopOffWord(choppingPart, word);
         }
-        return bookSplit[0] + bookSplit[1];
+        return choppingPart + staticPart;
     }
 
     public static String chopOffWord(String source, String word) {

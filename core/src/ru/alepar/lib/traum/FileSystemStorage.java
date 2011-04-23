@@ -1,5 +1,6 @@
 package ru.alepar.lib.traum;
 
+import ru.alepar.lib.fs.FileSystem;
 import ru.alepar.lib.model.Author;
 import ru.alepar.lib.model.Book;
 import ru.alepar.lib.model.Folder;

@@ -1,4 +1,4 @@
-package ru.alepar.lib.traum;
+package ru.alepar.lib.fs;
 
 import ru.alepar.lib.stuff.Oops;
 

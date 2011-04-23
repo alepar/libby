@@ -6,6 +6,7 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import ru.alepar.lib.fs.FileSystem;
 import ru.alepar.lib.model.Author;
 import ru.alepar.lib.model.Book;
 import ru.alepar.lib.model.Folder;

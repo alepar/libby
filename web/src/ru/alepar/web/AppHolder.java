@@ -4,23 +4,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.alepar.ebook.convert.CalibreConverter;
 import ru.alepar.ebook.convert.Exec;
-import ru.alepar.ebook.convert.RuntimeExec;
+import ru.alepar.ebook.convert.JavaRuntimeExec;
 import ru.alepar.ebook.format.EbookType;
 import ru.alepar.ebook.format.FormatProvider;
 import ru.alepar.ebook.format.StaticFormatProvider;
 import ru.alepar.ebook.format.UserAgentDetector;
+import ru.alepar.lib.fs.FileFeeder;
+import ru.alepar.lib.fs.JavaFileSystem;
 import ru.alepar.lib.index.*;
 import ru.alepar.lib.list.Lister;
 import ru.alepar.lib.list.TraumLister;
 import ru.alepar.lib.model.Item;
 import ru.alepar.lib.translit.AleparTranslit;
 import ru.alepar.lib.translit.Translit;
-import ru.alepar.lib.traum.*;
+import ru.alepar.lib.traum.FileSystemStorage;
+import ru.alepar.lib.traum.ItemStorage;
+import ru.alepar.lib.traum.TraumIndexer;
 import ru.alepar.setting.ResourceSettings;
 import ru.alepar.setting.Settings;
 
 import java.io.File;
 import java.util.*;
+
+// TODO wishlist
+/*
+    - search output is printed in order of Score
+    - books are indexed by author name too
+    - authors get boost when indexed
+    - sort authors (amount of boost?) based on number of books author has
+
+    - move security stuff to FileSystem
+    - replace File class with String in FileSystem interface  (TraumLister, FileFeeder)
+
+    - paged output
+ */
 
 public class AppHolder {
 
@@ -28,7 +45,7 @@ public class AppHolder {
 
     private static final Settings settings = new ResourceSettings(ResourceBundle.getBundle("/libby"));
     private static final FormatProvider provider = new StaticFormatProvider();
-    private static final Exec exec = new RuntimeExec();
+    private static final Exec exec = new JavaRuntimeExec();
     private static final UserAgentDetector detector = new UserAgentDetector();
     private static final Translit translit = new AleparTranslit();
 

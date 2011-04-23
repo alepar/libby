@@ -1,9 +1,9 @@
 package ru.alepar.lib.list;
 
+import ru.alepar.lib.fs.Chopper;
+import ru.alepar.lib.fs.FileSystem;
 import ru.alepar.lib.model.Folder;
 import ru.alepar.lib.model.Item;
-import ru.alepar.lib.traum.Chopper;
-import ru.alepar.lib.traum.FileSystem;
 import ru.alepar.lib.traum.ItemStorage;
 
 import java.io.File;

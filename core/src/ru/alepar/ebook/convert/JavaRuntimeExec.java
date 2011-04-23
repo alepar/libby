@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.util.Arrays;
 
-public class RuntimeExec implements Exec {
+public class JavaRuntimeExec implements Exec {
 
-    private final Logger log = LoggerFactory.getLogger(RuntimeExec.class);
+    private final Logger log = LoggerFactory.getLogger(JavaRuntimeExec.class);
 
     @Override
     public int exec(String[] cmd) {

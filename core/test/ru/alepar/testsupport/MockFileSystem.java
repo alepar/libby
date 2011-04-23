@@ -1,6 +1,6 @@
 package ru.alepar.testsupport;
 
-import ru.alepar.lib.traum.FileSystem;
+import ru.alepar.lib.fs.FileSystem;
 
 import java.io.File;
 import java.util.HashMap;

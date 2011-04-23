@@ -32,7 +32,7 @@ public class ItemIndexer implements ItemVisitor {
         }
 
         try {
-            index.addPath(book.path, indexWords);
+            index.addPath(book.path, indexWords, null);
         } catch (Exception e) {
             throw new RuntimeException("failed to add book to index", e);
         }
@@ -41,7 +41,7 @@ public class ItemIndexer implements ItemVisitor {
     @Override
     public void onAuthor(Author author) {
         try {
-            index.addPath(author.path, author.name);
+            index.addPath(author.path, author.name, null);
         } catch (Exception e) {
             throw new RuntimeException("failed to add author to index", e);
         }

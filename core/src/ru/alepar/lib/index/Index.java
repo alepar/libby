@@ -3,13 +3,13 @@ package ru.alepar.lib.index;
 import org.apache.lucene.queryParser.ParseException;
 
 import java.io.IOException;
-import java.util.SortedSet;
+import java.util.List;
 
 public interface Index {
 
 
-    void addPath(String path, String indexWords) throws IOException;
+    void addPath(String path, String indexWords, Double boost) throws IOException;
 
-    SortedSet<String> find(String query) throws ParseException, IOException;
+    List<String> find(String query) throws ParseException, IOException;
 
 }

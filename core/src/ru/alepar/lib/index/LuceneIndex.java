@@ -17,8 +17,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 
 import java.io.IOException;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LuceneIndex implements Index {
 
@@ -41,7 +41,7 @@ public class LuceneIndex implements Index {
     }
 
     @Override
-    public void addPath(String path, String indexWords) throws IOException {
+    public void addPath(String path, String indexWords, Double boost) throws IOException {
         Document doc = new Document();
 
         Field pathField = new Field("path", path, Field.Store.YES, Field.Index.NO);
@@ -50,15 +50,19 @@ public class LuceneIndex implements Index {
         Field nameField = new Field("name", indexWords, Field.Store.NO, Field.Index.ANALYZED);
         doc.add(nameField);
 
+        if (boost != null) {
+            doc.setBoost(new Float(boost));
+        }
+
         writer().updateDocument(new Term("path", path), doc);
         writer().commit();
     }
 
     @Override
-    public SortedSet<String> find(String query) throws ParseException, IOException {
+    public List<String> find(String query) throws ParseException, IOException {
         IndexSearcher searcher = searcher();
 
-        SortedSet<String> pathsFound = new TreeSet<String>();
+        List<String> pathsFound = new ArrayList<String>();
         try {
             pathsFound.addAll(searchField(query, searcher, "name"));
         } finally {
@@ -68,12 +72,11 @@ public class LuceneIndex implements Index {
         return pathsFound;
     }
 
-    private SortedSet<String> searchField(String queryString, IndexSearcher searcher, String searchField) throws ParseException, IOException {
-        SortedSet<String> results;
+    private List<String> searchField(String queryString, IndexSearcher searcher, String searchField) throws ParseException, IOException {
         Query query = parser(searchField).parse(queryString);
         TopDocs docs = searcher.search(query, null, QUERY_LIMIT);
 
-        results = new TreeSet<String>();
+        List<String> results = new ArrayList<String>(docs.totalHits);
         for (ScoreDoc scoreDoc : docs.scoreDocs) {
             Document doc = searcher.doc(scoreDoc.doc);
             results.add(doc.get("path"));

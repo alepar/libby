@@ -30,7 +30,7 @@ public class ItemIndexerTest {
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(hasWords(
                     "Геном"
-            )));
+            )), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -46,7 +46,7 @@ public class ItemIndexerTest {
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(hasWords(
                     series
-            )));
+            )), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -61,7 +61,7 @@ public class ItemIndexerTest {
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(hasWords(
                     "Перумов"
-            )));
+            )), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -75,7 +75,7 @@ public class ItemIndexerTest {
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(hasWords(
                     "ru", "периодика", "Журнал", "PC", "Magazine", "RE", "01", "2009"
-            )));
+            )), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -88,7 +88,7 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "Л", author, bookName + ".fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(not(hasWords("Лукьяненко"))));
+            one(index).addPath(with(equalTo(path)), with(not(hasWords("Лукьяненко"))), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -101,7 +101,7 @@ public class ItemIndexerTest {
         final String path = createPath("ru", "Л", author, bookName + ".fb2.zip");
 
         mockery.checking(new Expectations() {{
-            one(index).addPath(with(equalTo(path)), with(hasWords("Сергей")));
+            one(index).addPath(with(equalTo(path)), with(hasWords("Сергей")), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -115,7 +115,7 @@ public class ItemIndexerTest {
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(hasWords(
                     "Лукьяненко", "Сергей"
-            )));
+            )), with(any(Double.class)));
         }});
 
         indexer.onAuthor(new Author(path, author));
@@ -132,7 +132,7 @@ public class ItemIndexerTest {
             one(index).addPath(with(equalTo(path)), with(allOf(
                     hasWords(series),
                     not(hasWords("Лукьяненко"))
-            )));
+            )), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));
@@ -161,7 +161,7 @@ public class ItemIndexerTest {
         mockery.checking(new Expectations() {{
             one(index).addPath(with(equalTo(path)), with(
                     hasWords("Танцы", "на", "снегу")
-            ));
+            ), with(any(Double.class)));
         }});
 
         indexer.onBook(new Book(path, bookName));

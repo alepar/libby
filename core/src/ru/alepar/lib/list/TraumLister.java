@@ -36,7 +36,7 @@ public class TraumLister implements Lister {
             SortedSet<Item> books = new TreeSet<Item>();
 
             String parentFolder = fs.create(pathToList, "..");
-            if (fs.exists(parentFolder)) {
+            if (parentFolder != null && fs.exists(parentFolder)) {
                 folders.add(new Folder(parentFolder, ".."));
             }
 

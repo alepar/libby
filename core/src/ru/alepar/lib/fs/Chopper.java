@@ -29,6 +29,9 @@ public class Chopper {
         if (basePath.equals(path)) {
             return ".";
         }
+        if (!path.startsWith(basePath)) {
+            return null; //kinda additional security
+        }
         return path.substring(basePath.length() + offset);
 
     }

@@ -38,6 +38,13 @@ public class ChopperTest {
         assertThat(chopper.chop(new File("", "test")), equalTo("."));
     }
 
+    @Test
+    public void chopsPathThatsIsNotInItsBasePathToNull() throws Exception {
+        Chopper chopper = new Chopper(new File("/tmp/smth"));
+
+        assertThat(chopper.chop(new File("/tmp")), equalTo(null));
+    }
+
     private static String concat(String... names) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < names.length; i++) {

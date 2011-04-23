@@ -15,8 +15,6 @@ import ru.alepar.lib.index.*;
 import ru.alepar.lib.list.Lister;
 import ru.alepar.lib.list.TraumLister;
 import ru.alepar.lib.model.Item;
-import ru.alepar.lib.translit.AleparTranslit;
-import ru.alepar.lib.translit.Translit;
 import ru.alepar.lib.traum.FileSystemStorage;
 import ru.alepar.lib.traum.ItemStorage;
 import ru.alepar.lib.traum.TraumIndexer;
@@ -24,14 +22,15 @@ import ru.alepar.setting.ResourceSettings;
 import ru.alepar.setting.Settings;
 
 import java.io.File;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
 
 // TODO wishlist
 /*
-    - search output is printed in order of Score
-    - books are indexed by author name too
     - authors get boost when indexed
     - sort authors (amount of boost?) based on number of books author has
+    - series output format
 
     - move security stuff to FileSystem
     - replace File class with String in FileSystem interface  (TraumLister, FileFeeder)
@@ -47,12 +46,12 @@ public class AppHolder {
     private static final FormatProvider provider = new StaticFormatProvider();
     private static final Exec exec = new JavaRuntimeExec();
     private static final UserAgentDetector detector = new UserAgentDetector();
-    private static final Translit translit = new AleparTranslit();
+    private static final CalibreConverter converter = new CalibreConverter(settings.calibreConvert(), exec, provider);
 
     private static ItemStorage storage;
     private static Index index;
-    private static CalibreConverter converter;
     private static Lister lister;
+    private static Querier querier;
 
 
     static {
@@ -67,8 +66,7 @@ public class AppHolder {
             instantiateIndexes();
             reindex();
 
-            converter = new CalibreConverter(settings.calibreConvert(), exec, provider);
-
+            querier = new Querier(index, storage);
         } catch (Exception e) {
             log.error("failed to bring up libby, terminating", e);
             System.exit(-1);
@@ -103,25 +101,7 @@ public class AppHolder {
     }
 
     public static Iterable<Item> query(String query) {
-        try {
-            Set<String> queries = new HashSet<String>();
-            queries.add(query);
-            queries.addAll(translit.translate(query));
-
-            SortedSet<String> paths = new TreeSet<String>();
-            for (String q : queries) {
-                paths.addAll(index.find(q));
-            }
-
-            List<Item> items = new ArrayList<Item>(paths.size());
-            for (String path : paths) {
-                items.add(storage.get(path));
-            }
-            return items;
-        } catch (Exception e) {
-            log.warn("query failed: " + query, e);
-            throw new RuntimeException("query failed: " + query, e);
-        }
+        return querier.find(query);
     }
 
     public static List<Item> list(String path) {

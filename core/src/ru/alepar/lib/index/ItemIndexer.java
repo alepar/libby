@@ -58,14 +58,12 @@ public class ItemIndexer implements ItemVisitor {
     }
 
     private static String extractIndexForBookWithSeriesInfo(String[] split) {
-        String author = split[2];
         String seriesName = split[3];
         String bookName = chopOffExtension(split[4]);
         return cleanup(bookName) + " " + seriesName;
     }
 
     private static String extractIndexForBookWithNoSeriesInfo(String[] split) {
-        String author = split[2];
         String bookName = chopOffExtension(split[3]);
         return cleanup(bookName);
     }

@@ -30,8 +30,7 @@ import java.util.ResourceBundle;
 /*
     - sort authors (amount of boost?) based on number of books author has
 
-    - move security stuff to FileSystem
-    - replace File class with String in FileSystem interface  (TraumLister, FileFeeder)
+    - security tests for JavaFileSystem
 
     - when page errors - send report
     - paged output
@@ -51,16 +50,16 @@ public class AppHolder {
     private static Index index;
     private static Lister lister;
     private static Querier querier;
+    private static JavaFileSystem fs;
 
 
     static {
         try {
             log.info("traum.root = {}", settings.traumRoot());
-            File basePath = new File(settings.traumRoot());
 
-            JavaFileSystem fs = new JavaFileSystem(basePath);
+            fs = new JavaFileSystem(new File(settings.traumRoot()));
             storage = new FileSystemStorage(fs);
-            lister = new TraumLister(basePath, storage, fs);
+            lister = new TraumLister(storage, fs);
 
             instantiateIndexes();
             reindex();
@@ -77,7 +76,7 @@ public class AppHolder {
         if (settings.traumReindex()) {
             log.info("reindexing");
             Date start = new Date();
-            Iterable<String> feeder = new FileFeeder(new File(settings.traumRoot()));
+            Iterable<String> feeder = new FileFeeder(settings.traumRoot(), fs);
             TraumIndexer indexer = new TraumIndexer(feeder, storage, new ItemIndexer(index));
             indexer.go();
             Date end = new Date();

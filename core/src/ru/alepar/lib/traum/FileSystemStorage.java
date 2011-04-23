@@ -21,22 +21,21 @@ public class FileSystemStorage implements ItemStorage {
 
     @Override
     public Item get(String path) {
-        File curFile = fs.createFile(path);
         String[] split = path.split(Pattern.quote(File.separator));
 
-        if (!fs.exists(curFile)) {
+        if (!fs.exists(path)) {
             throw new IllegalArgumentException("path doesn't exist, path = " + path);
         }
 
-        if (fs.isDirectory(curFile)) {
+        if (fs.isDirectory(path)) {
             if (split.length != 3 || "_".equals(split[1])) {
-                return new Folder(path, fs.getName(curFile));
+                return new Folder(path, fs.getName(path));
             } else {
-                return new Author(path, fs.getName(curFile));
+                return new Author(path, fs.getName(path));
             }
         }
 
-        String fileNameWithoutExtension = chopOffExtension(fs.getName(curFile));
+        String fileNameWithoutExtension = chopOffExtension(fs.getName(path));
 
         if ("_".equals(split[1])) {
             return new Book(path, fileNameWithoutExtension);

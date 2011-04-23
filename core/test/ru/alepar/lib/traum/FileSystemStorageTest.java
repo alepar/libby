@@ -11,8 +11,6 @@ import ru.alepar.lib.model.Author;
 import ru.alepar.lib.model.Book;
 import ru.alepar.lib.model.Folder;
 
-import java.io.File;
-
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static ru.alepar.testsupport.MyMatchers.hasWords;
@@ -29,19 +27,15 @@ public class FileSystemStorageTest {
     public void authorFolderPathReturnsAuthorObjectWithProperName() throws Exception {
         final String author = "Лукьяненко Сергей";
         final String path = PathUtils.createPath("ru", "Л", author);
-        final File file = new File(path);
 
         mockery.checking(new Expectations() {{
-            allowing(fs).createFile(path);
-            will(returnValue(file));
-
-            allowing(fs).exists(file);
+            allowing(fs).exists(path);
             will(returnValue(true));
 
-            allowing(fs).isDirectory(file);
+            allowing(fs).isDirectory(path);
             will(returnValue(true));
 
-            allowing(fs).getName(file);
+            allowing(fs).getName(path);
             will(returnValue(author));
         }});
 
@@ -53,19 +47,15 @@ public class FileSystemStorageTest {
     public void shortFolderPathReturnsFolder() throws Exception {
         final String folderName = "Л";
         final String path = PathUtils.createPath("ru", folderName);
-        final File file = new File(path);
 
         mockery.checking(new Expectations() {{
-            allowing(fs).createFile(path);
-            will(returnValue(file));
-
-            allowing(fs).exists(file);
+            allowing(fs).exists(path);
             will(returnValue(true));
 
-            allowing(fs).isDirectory(file);
+            allowing(fs).isDirectory(path);
             will(returnValue(true));
 
-            allowing(fs).getName(file);
+            allowing(fs).getName(path);
             will(returnValue(folderName));
         }});
 
@@ -77,19 +67,15 @@ public class FileSystemStorageTest {
     public void underscoreFolderPathReturnsFolder() throws Exception {
         final String folderName = "_scifi";
         final String path = PathUtils.createPath("ru", "_", folderName);
-        final File file = new File(path);
 
         mockery.checking(new Expectations() {{
-            allowing(fs).createFile(path);
-            will(returnValue(file));
-
-            allowing(fs).exists(file);
+            allowing(fs).exists(path);
             will(returnValue(true));
 
-            allowing(fs).isDirectory(file);
+            allowing(fs).isDirectory(path);
             will(returnValue(true));
 
-            allowing(fs).getName(file);
+            allowing(fs).getName(path);
             will(returnValue(folderName));
         }});
 
@@ -104,19 +90,14 @@ public class FileSystemStorageTest {
         final String fileName = bookName + ".fb2.zip";
         final String path = PathUtils.createPath("ru", "Л", author, fileName);
 
-        final File file = new File(path);
-
         mockery.checking(new Expectations() {{
-            allowing(fs).createFile(path);
-            will(returnValue(file));
-
-            allowing(fs).exists(file);
+            allowing(fs).exists(path);
             will(returnValue(true));
 
-            allowing(fs).isDirectory(file);
+            allowing(fs).isDirectory(path);
             will(returnValue(false));
 
-            allowing(fs).getName(file);
+            allowing(fs).getName(path);
             will(returnValue(fileName));
         }});
 
@@ -132,19 +113,14 @@ public class FileSystemStorageTest {
         final String fileName = bookName + ".fb2.zip";
         final String path = PathUtils.createPath("ru", "Л", author, seriesName, fileName);
 
-        final File file = new File(path);
-
         mockery.checking(new Expectations() {{
-            allowing(fs).createFile(path);
-            will(returnValue(file));
-
-            allowing(fs).exists(file);
+            allowing(fs).exists(path);
             will(returnValue(true));
 
-            allowing(fs).isDirectory(file);
+            allowing(fs).isDirectory(path);
             will(returnValue(false));
 
-            allowing(fs).getName(file);
+            allowing(fs).getName(path);
             will(returnValue(fileName));
         }});
 

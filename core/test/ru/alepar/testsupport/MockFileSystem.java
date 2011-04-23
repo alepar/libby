@@ -17,41 +17,41 @@ public class MockFileSystem implements FileSystem {
     }
 
     @Override
-    public boolean exists(File file) {
-        return records.containsKey(file.getPath());
+    public boolean exists(String file) {
+        return records.containsKey(file);
     }
 
     @Override
-    public String getName(File file) {
-        return file.getName();
+    public String getName(String file) {
+        return new File(file).getName();
     }
 
     @Override
-    public boolean isDirectory(File file) {
-        return exists(file) && records.get(file.getPath()).directory;
+    public boolean isDirectory(String file) {
+        return exists(file) && records.get(file).directory;
     }
 
     @Override
-    public boolean isFile(File file) {
-        return exists(file) && !records.get(file.getPath()).directory;
+    public boolean isFile(String file) {
+        return exists(file) && !records.get(file).directory;
     }
 
     @Override
-    public File createFile(String path) {
-        return new File(path);
-    }
-
-    @Override
-    public File[] listFiles(File file) {
-        List<File> result = new LinkedList<File>();
+    public String[] listFiles(String file) {
+        List<String> result = new LinkedList<String>();
 
         for (String path : records.keySet()) {
-            if (!path.equals(file.getPath()) && path.startsWith(file.getPath())) {
-                result.add(new File(path));
+            if (!path.equals(file) && path.startsWith(file)) {
+                result.add(path);
             }
         }
 
-        return result.toArray(new File[result.size()]);
+        return result.toArray(new String[result.size()]);
+    }
+
+    @Override
+    public String create(String base, String sub) {
+        return new File(base, sub).getPath();
     }
 
     private static class Record {

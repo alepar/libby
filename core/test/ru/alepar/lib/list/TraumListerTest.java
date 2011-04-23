@@ -28,7 +28,7 @@ public class TraumListerTest {
     private final File root = new File(".");
     private final ItemStorage storage = mockery.mock(ItemStorage.class);
     private final MockFileSystem fileSystem = new MockFileSystem();
-    private final TraumLister lister = new TraumLister(root, storage, fileSystem);
+    private final TraumLister lister = new TraumLister(storage, fileSystem);
 
     @Test
     public void listsFolderWithAuthorsWithoutExceptions() {
@@ -58,8 +58,8 @@ public class TraumListerTest {
         }});
 
         List<Item> items = lister.list(basePath);
+
         assertThat(items, equalTo(Arrays.<Item>asList(
-                new Folder("ru", ".."),
                 authorOne,
                 authorTwo
         )));

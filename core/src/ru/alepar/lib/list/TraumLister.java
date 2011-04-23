@@ -1,35 +1,25 @@
 package ru.alepar.lib.list;
 
-import ru.alepar.lib.fs.Chopper;
 import ru.alepar.lib.fs.FileSystem;
 import ru.alepar.lib.model.Folder;
 import ru.alepar.lib.model.Item;
 import ru.alepar.lib.traum.ItemStorage;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class TraumLister implements Lister {
 
     private final FileSystem fs;
-    private final File root;
     private final ItemStorage extractor;
-    private final Chopper chopper;
 
-    public TraumLister(File root, ItemStorage extractor, FileSystem fs) {
-        this.root = root;
+    public TraumLister(ItemStorage extractor, FileSystem fs) {
         this.extractor = extractor;
         this.fs = fs;
-        this.chopper = new Chopper(root);
     }
 
     @Override
-    public List<Item> list(String path) {
+    public List<Item> list(String pathToList) {
         try {
-            File pathToList = fs.createFile(path);
-            securityCheck(pathToList);
-
             if (!fs.exists(pathToList)) {
                 throw new RuntimeException("path does not exist");
             }
@@ -45,22 +35,17 @@ public class TraumLister implements Lister {
             });
             SortedSet<Item> books = new TreeSet<Item>();
 
-            try {
-                File parentFolder = fs.createFile(path + File.separatorChar + "..");
-                securityCheck(parentFolder);
-
-                folders.add(new Folder(chopper.chop(parentFolder), ".."));
-            } catch (RuntimeException e) {
-                //ignored
+            String parentFolder = fs.create(pathToList, "..");
+            if (fs.exists(parentFolder)) {
+                folders.add(new Folder(parentFolder, ".."));
             }
 
-            for (File file : fs.listFiles(pathToList)) {
-                String relativePath = chopper.chop(file);
+            for (String file : fs.listFiles(pathToList)) {
                 if (fs.isDirectory(file)) {
-                    folders.add(extractor.get(relativePath));
+                    folders.add(extractor.get(file));
                 }
                 if (fs.isFile(file)) {
-                    books.add(extractor.get(relativePath));
+                    books.add(extractor.get(file));
                 }
             }
 
@@ -69,16 +54,7 @@ public class TraumLister implements Lister {
             result.addAll(books);
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("listing failed, path= " + path, e);
-        }
-    }
-
-    private void securityCheck(File pathToList) throws IOException {
-        String canonicalPath = pathToList.getCanonicalPath();
-        String canonicalRoot = root.getCanonicalPath();
-
-        if (!canonicalPath.startsWith(canonicalRoot)) {
-            throw new RuntimeException("path does not exist");
+            throw new RuntimeException("listing failed, path= " + pathToList, e);
         }
     }
 

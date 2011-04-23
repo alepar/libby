@@ -1,17 +1,17 @@
 package ru.alepar.lib.fs;
 
-import java.io.File;
-
 public interface FileSystem {
-    boolean exists(File file);
 
-    String getName(File file);
+    boolean exists(String path);
 
-    boolean isDirectory(File file);
+    boolean isDirectory(String path);
 
-    File createFile(String path);
+    boolean isFile(String path);
 
-    File[] listFiles(File file);
+    String getName(String path);
 
-    boolean isFile(File file);
+    String[] listFiles(String path);
+
+    String create(String base, String sub);
+
 }

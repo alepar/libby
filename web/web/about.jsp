@@ -51,10 +51,11 @@
     </tr>
     <tr align="center">
         <td><a href="http://lucene.apache.org"><img src="http://lucene.apache.org/images/lucene_green_300.gif"
-                                                    alt="Lucene"/></a></td>
+                                                    alt="Lucene" style="border-style: none"/></a></td>
     </tr>
     <tr align="center">
-        <td><a href="http://tomcat.apache.org"><img src="http://tomcat.apache.org/images/tomcat.gif" alt="Tomcat"/></a>
+        <td><a href="http://tomcat.apache.org"><img src="http://tomcat.apache.org/images/tomcat.gif" alt="Tomcat"
+                                                    style="border-style: none"/></a>
         </td>
     </tr>
 </table>

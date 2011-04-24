@@ -50,11 +50,11 @@
         <td>libby ver.0.5</td>
     </tr>
     <tr align="center">
-        <td><a href="http://lucene.apache.org"><img src="http://lucene.apache.org/images/lucene_green_300.gif"
+        <td><a href="http://lucene.apache.org"><img src="/static/lucene.gif"
                                                     alt="Lucene" style="border-style: none"/></a></td>
     </tr>
     <tr align="center">
-        <td><a href="http://tomcat.apache.org"><img src="http://tomcat.apache.org/images/tomcat.gif" alt="Tomcat"
+        <td><a href="http://tomcat.apache.org"><img src="/static/tomcat.gif" alt="Tomcat"
                                                     style="border-style: none"/></a>
         </td>
     </tr>

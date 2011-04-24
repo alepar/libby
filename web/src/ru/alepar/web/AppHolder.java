@@ -136,6 +136,6 @@ public class AppHolder {
     }
 
     public static String status() {
-        return String.format("index takes %.2fMiB, contains %d files, took %dsec to build", indexSize, indexCount, indexTime);
+        return String.format("index takes %.2fMiB, contains %d files, took %ds to build", indexSize, indexCount, indexTime);
     }
 }

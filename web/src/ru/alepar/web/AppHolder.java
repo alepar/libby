@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 
 // TODO wishlist
 /*
+    -dropdown box for explicit format choice
+
     - security tests for JavaFileSystem
     - counter tests for ItemIndexer (bigger author goes first, query with author and bookname gets book as first result, not overboosted author)
     - лукьяненко дозор http://lucene.apache.org/java/3_1_0/scoring.html

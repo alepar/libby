@@ -47,7 +47,7 @@
         </td>
     </tr>
     <tr align="center">
-        <td>libby ver.0.4</td>
+        <td>libby ver.0.5</td>
     </tr>
     <tr align="center">
         <td><a href="http://lucene.apache.org"><img src="http://lucene.apache.org/images/lucene_green_300.gif"

@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 // TODO wishlist
 /*
     - dropdown box for explicit format choice
-    - check layout in kindle
+    - check on simple kindle
 
     - security tests for JavaFileSystem
     - counter tests for ItemIndexer (bigger author goes first, query with author and bookname gets book as first result, not overboosted author)

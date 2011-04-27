@@ -19,7 +19,7 @@
 <div style="float: right"><%=AppHolder.detect(request.getHeader("User-Agent"))%>
 </div>
 
-<div id="results">
+<div id="results" style="clear: both;">
     <% String query = request.getParameter("query");
         String path = request.getParameter("path");
         Iterable<Item> items = null;

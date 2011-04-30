@@ -3,6 +3,7 @@ package ru.alepar.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.alepar.ebook.convert.CalibreConverter;
+import ru.alepar.ebook.convert.Converter;
 import ru.alepar.ebook.convert.Exec;
 import ru.alepar.ebook.convert.JavaRuntimeExec;
 import ru.alepar.ebook.format.EbookType;
@@ -10,6 +11,7 @@ import ru.alepar.ebook.format.FormatProvider;
 import ru.alepar.ebook.format.StaticFormatProvider;
 import ru.alepar.ebook.format.UserAgentDetector;
 import ru.alepar.lib.fs.FileFeeder;
+import ru.alepar.lib.fs.FileSystem;
 import ru.alepar.lib.fs.JavaFileSystem;
 import ru.alepar.lib.index.*;
 import ru.alepar.lib.list.Lister;
@@ -30,6 +32,7 @@ import java.util.ResourceBundle;
 /*
     - dropdown box for explicit format choice
     - check on simple kindle
+    - paths along with just books
 
     - security tests for JavaFileSystem
     - counter tests for ItemIndexer (bigger author goes first, query with author and bookname gets book as first result, not overboosted author)
@@ -49,13 +52,13 @@ public class AppHolder {
     private static final FormatProvider provider = new StaticFormatProvider();
     private static final Exec exec = new JavaRuntimeExec();
     private static final UserAgentDetector detector = new UserAgentDetector();
-    private static final CalibreConverter converter = new CalibreConverter(settings.calibreConvert(), exec, provider);
+    private static final Converter converter = new CalibreConverter(settings.calibreConvert(), exec, provider);
 
     private static ItemStorage storage;
     private static Index index;
     private static Lister lister;
     private static Querier querier;
-    private static JavaFileSystem fs;
+    private static FileSystem fs;
 
     private static long indexTime;
     private static int indexCount;

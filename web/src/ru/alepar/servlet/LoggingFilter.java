@@ -26,11 +26,15 @@ public class LoggingFilter implements Filter {
             String remoteHost = xForwardedFor == null || xForwardedFor.isEmpty() ? request.getRemoteHost() : xForwardedFor;
 
             String url = request.getRequestURI();
-            String queryString = request.getQueryString();
-            queryString = queryString == null || queryString.isEmpty() ? "" : "?" + queryString;
-            queryString = URLDecoder.decode(queryString, "utf8");
 
-            log.info("client = {}; url = {}{}", new Object[]{remoteHost, url, queryString});
+
+            if (!"/favicon.ico".equals(url)) {
+                String queryString = request.getQueryString();
+                queryString = queryString == null || queryString.isEmpty() ? "" : "?" + queryString;
+                queryString = URLDecoder.decode(queryString, "utf8");
+
+                log.info("client = {}; url = {}{}", new Object[]{remoteHost, url, queryString});
+            }
         }
 
 

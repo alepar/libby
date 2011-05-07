@@ -27,17 +27,20 @@ public class GetServlet extends HttpServlet {
 
         String path = request.getParameterNames().nextElement();
 
-        File in = AppHolder.getFile(path);
         EbookType type = EbookTypeFilter.ebookType(request);
-        log.debug("requested EbookType = " + type);
+        File in = AppHolder.getFile(path);
         File out = AppHolder.convertFile(in, type);
         String outName = AppHolder.convertName(in.getName(), type);
 
-        response.setContentType("application/octet-stream");
-        response.setContentLength((int) out.length());
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(outName, "UTF-8") + "\"");
+        sendFile(response, out, outName);
+    }
 
-        FileInputStream is = new FileInputStream(out);
+    private void sendFile(HttpServletResponse response, File src, String fileName) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setContentLength((int) src.length());
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileName, "UTF-8") + "\"");
+
+        FileInputStream is = new FileInputStream(src);
         try {
             IOUtils.copy(is, response.getOutputStream());
         } finally {

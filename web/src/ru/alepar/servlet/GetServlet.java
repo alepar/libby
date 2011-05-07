@@ -28,7 +28,7 @@ public class GetServlet extends HttpServlet {
         String path = request.getParameterNames().nextElement();
 
         File in = AppHolder.getFile(path);
-        EbookType type = AppHolder.detect(request.getHeader("User-Agent"));
+        EbookType type = EbookTypeFilter.ebookType(request);
         log.debug("requested EbookType = " + type);
         File out = AppHolder.convertFile(in, type);
         String outName = AppHolder.convertName(in.getName(), type);

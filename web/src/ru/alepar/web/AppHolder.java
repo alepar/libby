@@ -30,9 +30,7 @@ import java.util.ResourceBundle;
 
 // TODO wishlist
 /*
-    - dropdown box for explicit format choice
-    - check on simple kindle
-    - paths along with just books
+    - paths along with just books  (small screens?)
 
     - security tests for JavaFileSystem
     - counter tests for ItemIndexer (bigger author goes first, query with author and bookname gets book as first result, not overboosted author)
@@ -134,7 +132,7 @@ public class AppHolder {
     }
 
     public static String convertName(String name, EbookType type) {
-        if (type == EbookType.UNKNOWN) {
+        if (type == EbookType.DONT_CONVERT) {
             return name;
         }
         String nameWithoutExt = name.substring(0, name.indexOf("."));

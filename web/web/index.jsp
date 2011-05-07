@@ -3,7 +3,17 @@
 <%@ page import="ru.alepar.lib.model.Folder" %>
 <%@ page import="ru.alepar.lib.model.Item" %>
 <%@ page import="ru.alepar.web.AppHolder" %>
+<%@ page import="ru.alepar.ebook.format.EbookType" %>
+<%@ page import="ru.alepar.servlet.EbookTypeFilter" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
+
+<%
+    String paramType = request.getParameter("type");
+    if (paramType != null && !paramType.isEmpty()) {
+        EbookTypeFilter.saveEbookType(EbookType.valueOf(paramType), request);
+    }
+%>
+
 <html>
 <head>
     <title>traum@alepar.ru</title>
@@ -13,10 +23,20 @@
 
 <div style="float: left">
     <form action="" method="get">
-        <input type="text" name="query"/><input type="submit" value="go"/><a href="about.jsp">?</a>
+        <input type="text" name="query"/><input type="submit" value="go"/>&nbsp;<a href="about.jsp">?</a>
     </form>
 </div>
-<div style="float: right"><%=AppHolder.detect(request.getHeader("User-Agent"))%>
+<div style="float: right">
+    <form action="" method="get">
+        <select name="type" onChange="this.form.submit()">
+            <%
+                for (EbookType type : EbookType.values()) {
+            %>
+            <option value="<%=type.name()%>" <%=type.equals(EbookTypeFilter.ebookType(request)) ? "selected" : ""%>><%=type.name()%>
+            </option>
+            <% } %>
+        </select>
+    </form>
 </div>
 
 <div id="results" style="clear: both;">

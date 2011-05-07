@@ -25,6 +25,17 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>EbookTypeFilter</filter-name>
+        <filter-class>
+            ru.alepar.servlet.EbookTypeFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EbookTypeFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!--
         <filter>
             <filter-name>MDCInsertingServletFilter</filter-name>

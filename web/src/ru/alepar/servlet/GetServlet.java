@@ -34,6 +34,7 @@ public class GetServlet extends HttpServlet {
         String outName = AppHolder.convertName(in.getName(), type);
 
         response.setContentType("application/octet-stream");
+        response.setContentLength((int) out.length());
         response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(outName, "UTF-8") + "\"");
 
         FileInputStream is = new FileInputStream(out);

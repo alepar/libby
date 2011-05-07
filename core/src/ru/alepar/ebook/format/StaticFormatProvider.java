@@ -12,10 +12,12 @@ public class StaticFormatProvider implements FormatProvider {
         extensionsForEbook.put(EbookType.KINDLE, "mobi");
         extensionsForEbook.put(EbookType.KINDLE_DX, "mobi");
         extensionsForEbook.put(EbookType.NOOK, "epub");
+        extensionsForEbook.put(EbookType.SONY, "lrf");
 
         outputForEbook.put(EbookType.KINDLE, "kindle");
         outputForEbook.put(EbookType.KINDLE_DX, "kindle_dx");
         outputForEbook.put(EbookType.NOOK, "nook");
+        outputForEbook.put(EbookType.SONY, "sony");
     }
 
     @Override

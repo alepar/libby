@@ -23,7 +23,7 @@ public class CalibreConverter implements Converter {
 
     @Override
     public File convertFor(EbookType type, File file) {
-        if (type == EbookType.UNKNOWN) {
+        if (type == EbookType.DONT_CONVERT) {
             return file; // ebook not recognized, conversion will not be performed
         }
         try {

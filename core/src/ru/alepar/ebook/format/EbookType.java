@@ -1,8 +1,9 @@
 package ru.alepar.ebook.format;
 
 public enum EbookType {
-    UNKNOWN,
-    NOOK,
-    KINDLE,
+    DONT_CONVERT,
     KINDLE_DX,
+    KINDLE,
+    NOOK,
+    SONY,
 }

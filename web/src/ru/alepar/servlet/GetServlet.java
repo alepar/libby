@@ -1,5 +1,7 @@
 package ru.alepar.servlet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.alepar.ebook.format.EbookType;
 import ru.alepar.io.IOUtils;
 import ru.alepar.web.AppHolder;
@@ -15,6 +17,8 @@ import java.net.URLEncoder;
 
 public class GetServlet extends HttpServlet {
 
+    private static final Logger log = LoggerFactory.getLogger(GetServlet.class);
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
@@ -25,6 +29,7 @@ public class GetServlet extends HttpServlet {
 
         File in = AppHolder.getFile(path);
         EbookType type = AppHolder.detect(request.getHeader("User-Agent"));
+        log.debug("requested EbookType = " + type);
         File out = AppHolder.convertFile(in, type);
         String outName = AppHolder.convertName(in.getName(), type);
 

@@ -2,7 +2,7 @@ package ru.alepar.lib.index;
 
 import ru.alepar.lib.model.Item;
 import ru.alepar.lib.translit.AleparTranslit;
-import ru.alepar.lib.translit.Translit;
+import ru.alepar.lib.translit.ToRusTranslit;
 import ru.alepar.lib.traum.ItemStorage;
 
 import java.util.*;
@@ -11,7 +11,7 @@ public class Querier {
 
     private final Index index;
     private final ItemStorage storage;
-    private final Translit translit = new AleparTranslit();
+    private final ToRusTranslit toRusTranslit = new AleparTranslit();
 
     public Querier(Index index, ItemStorage storage) {
         this.index = index;
@@ -22,7 +22,7 @@ public class Querier {
         try {
             Set<String> queries = new HashSet<String>();
             queries.add(query);
-            queries.addAll(translit.translate(query));
+            queries.addAll(toRusTranslit.rus(query));
 
             String orQuery = makeOrQuery(queries);
 

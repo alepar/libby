@@ -3,7 +3,7 @@ package ru.alepar.lib.translit;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AleparTranslit implements Translit {
+public class AleparTranslit implements ToRusTranslit {
 
     private static String[][] map = new String[][]{
             new String[]{"a", "а"},
@@ -46,7 +46,7 @@ public class AleparTranslit implements Translit {
     };
 
     @Override
-    public Set<String> translate(String str) {
+    public Set<String> rus(String str) {
         Set<String> result = new HashSet<String>();
 
         Set<Record> src = new HashSet<Record>();

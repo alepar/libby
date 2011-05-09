@@ -53,9 +53,10 @@ public class GetServlet extends HttpServlet {
 
     private static String makeOutFileName(String fileName) throws UnsupportedEncodingException {
         ToLatTranslit translit = new SomeTranslit();
-        fileName = translit.lat(fileName);
+        fileName = translit.lat(fileName.toLowerCase());
         fileName = fileName.replaceAll("[\\s]+", "_");
-        return URLEncoder.encode(fileName, "UTF-8");
+        return fileName;
+//        return URLEncoder.encode(fileName, "UTF-8");
     }
 
 }

@@ -50,7 +50,7 @@ your ebook - just enter your word in translit form. We will translate it into ru
         </td>
     </tr>
     <tr align="center">
-        <td>libby ver.0.6</td>
+        <td>libby ver.0.7</td>
     </tr>
     <tr align="center">
         <td><a href="http://lucene.apache.org"><img src="/static/lucene.gif"

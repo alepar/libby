@@ -6,6 +6,9 @@
     <meta equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
+<span style="font-style: italic;">Tip:</span> if you want to query for russian word, but cannot enter russian words on
+your ebook - just enter your word in translit form. We will translate it into russian for you! =)
+<br/><br/>
 
 <div style="font-weight: bold">Query cheat sheet</div>
 <table cellspacing="10">

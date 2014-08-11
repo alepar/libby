@@ -12,13 +12,13 @@ public class LoggingFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
-    public void init(FilterConfig config) throws ServletException {
+    @Override
+    public void init(FilterConfig config) throws ServletException { }
 
-    }
+    @Override
+    public void destroy() { }
 
-    public void destroy() {
-    }
-
+    @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         if (req instanceof HttpServletRequest) {
             HttpServletRequest request = (HttpServletRequest) req;
@@ -27,16 +27,14 @@ public class LoggingFilter implements Filter {
 
             String url = request.getRequestURI();
 
-
             if (!"/favicon.ico".equals(url)) {
                 String queryString = request.getQueryString();
-                queryString = queryString == null || queryString.isEmpty() ? "" : "?" + queryString;
+                queryString = queryString == null || queryString.isEmpty() ? "" : '?' + queryString;
                 queryString = URLDecoder.decode(queryString, "utf8");
 
-                log.info("client = {}; url = {}{}", new Object[]{remoteHost, url, queryString});
+                log.info("client = {}; url = {}{}", remoteHost, url, queryString);
             }
         }
-
 
         chain.doFilter(req, resp);
     }

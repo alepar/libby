@@ -14,31 +14,39 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Pattern;
 
 public class GetServlet extends HttpServlet {
 
+    private static final Pattern CLEANUP_SPECIAL_CHARS = Pattern.compile("[\\s]+");
+
     private final LibbyApp app = LibbyApp.Instance.get();
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final String path = request.getParameterNames().nextElement();
+        final EbookType type = EbookTypeFilter.ebookType(request);
 
-        String path = request.getParameterNames().nextElement();
+        final File in = app.getFile(path);
+        final String outName = app.convertName(in.getName(), type);
 
-        EbookType type = EbookTypeFilter.ebookType(request);
-        File in = app.getFile(path);
-        File out = app.convertFile(in, type);
-        String outName = app.convertName(in.getName(), type);
+        final File out = app.getCachedFile(path, type);
+        if (!out.isFile() || !out.canRead()) {
+            app.convertFile(in, out, type);
+        }
 
         sendFile(response, out, outName);
     }
 
-    private void sendFile(HttpServletResponse response, File src, String fileName) throws IOException {
+    private static void sendFile(HttpServletResponse response, File src, String fileName) throws IOException {
         response.setContentType("application/octet-stream");
         response.setContentLength((int) src.length());
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + makeOutFileName(fileName) + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + makeOutFileName(fileName) + '"');
 
         FileInputStream is = new FileInputStream(src);
         try {
@@ -48,12 +56,11 @@ public class GetServlet extends HttpServlet {
         }
     }
 
-    private static String makeOutFileName(String fileName) throws UnsupportedEncodingException {
+    private static String makeOutFileName(String fileName) {
         ToLatTranslit translit = new SomeTranslit();
         fileName = translit.lat(fileName.toLowerCase());
-        fileName = fileName.replaceAll("[\\s]+", "_");
+        fileName = CLEANUP_SPECIAL_CHARS.matcher(fileName).replaceAll("_");
         return fileName;
-//        return URLEncoder.encode(fileName, "UTF-8");
     }
 
 }

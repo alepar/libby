@@ -24,6 +24,7 @@ public class CalibreConverterTest {
     private final Exec exec = mockery.mock(Exec.class);
     private final FormatProvider provider = mockery.mock(FormatProvider.class);
     private final CalibreConverter converter = new CalibreConverter(BINARY, exec, provider);
+    private final File out = new File("someoutfile");
 
     @Before
     public void setUp() throws Exception {
@@ -42,7 +43,7 @@ public class CalibreConverterTest {
             will(returnValue(0));
         }});
 
-        converter.convertFor(EbookType.KINDLE_DX, new File("somefile"));
+        converter.convertFor(EbookType.KINDLE_DX, new File("somefile"), out);
     }
 
     @Test
@@ -55,7 +56,7 @@ public class CalibreConverterTest {
             will(returnValue(0));
         }});
 
-        converter.convertFor(EbookType.KINDLE_DX, input);
+        converter.convertFor(EbookType.KINDLE_DX, input, out);
     }
 
     @Test
@@ -67,7 +68,7 @@ public class CalibreConverterTest {
             will(returnValue(0));
         }});
 
-        converter.convertFor(EbookType.KINDLE_DX, input);
+        converter.convertFor(EbookType.KINDLE_DX, input, out);
     }
 
     @Test
@@ -79,7 +80,7 @@ public class CalibreConverterTest {
             will(returnValue(0));
         }});
 
-        converter.convertFor(EbookType.KINDLE_DX, input);
+        converter.convertFor(EbookType.KINDLE_DX, input, out);
     }
 
     @Test
@@ -91,7 +92,7 @@ public class CalibreConverterTest {
             will(returnValue(0));
         }});
 
-        converter.convertFor(EbookType.KINDLE_DX, input);
+        converter.convertFor(EbookType.KINDLE_DX, input, out);
     }
 
 }

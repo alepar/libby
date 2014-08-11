@@ -1,5 +1,6 @@
 package ru.alepar.web;
 
+import com.google.common.hash.Hashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.alepar.ebook.convert.CalibreConverter;
@@ -24,7 +25,7 @@ import ru.alepar.setting.ResourceSettings;
 import ru.alepar.setting.Settings;
 
 import java.io.File;
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -50,23 +51,27 @@ public class LibbyApp {
     private final UserAgentDetector detector = new UserAgentDetector();
     private final Converter converter = new CalibreConverter(settings.calibreConvert(), exec, provider);
 
-    private ItemStorage storage;
-    private Index index;
-    private Lister lister;
-    private Querier querier;
-    private FileSystem fs;
+    private final ItemStorage storage;
+    private final Index index;
+    private final Lister lister;
+    private final Querier querier;
+    private final FileSystem fs;
 
-    private long indexTime;
+    private final double indexSize;
+    private double indexTime;
     private int indexCount;
-    private double indexSize;
 
-    public static class Instance {
-
-        private static final LibbyApp app = new LibbyApp();
-
-        public static LibbyApp get() {
-            return app;
+    public File getCachedFile(String path, EbookType type) {
+        if (type == EbookType.DONT_CONVERT) {
+            return new File(path);
         }
+
+        final File tmpdir = new File(System.getProperty("java.io.tmpdir"));
+        return new File(tmpdir, "libby-" + hash(path + " | " + type.name()) + '.' + provider.extension(type));
+    }
+
+    private static String hash(String s) {
+        return Hashing.md5().hashString(s, StandardCharsets.UTF_8).toString();
     }
 
     public LibbyApp() {
@@ -77,7 +82,7 @@ public class LibbyApp {
             storage = new FileSystemStorage(fs);
             lister = new TraumLister(storage, fs);
 
-            instantiateIndexes();
+            index = instantiateIndexes(settings);
             reindex();
 
             indexSize = index.size() / 1024.0 / 1024.0;
@@ -86,18 +91,18 @@ public class LibbyApp {
         } catch (Exception e) {
             log.error("failed to bring up libby, terminating", e);
             System.exit(-1);
+            throw new RuntimeException(e);
         }
     }
 
     private void reindex() {
         if (settings.traumReindex()) {
             log.info("reindexing");
-            Date start = new Date();
+            final long start = System.nanoTime();
             Iterable<String> feeder = new FileFeeder(".", fs);
             TraumIndexer indexer = new TraumIndexer(feeder, storage, new ItemIndexer(index, new FileSystemFileCounter(fs)));
             indexer.go();
-            Date end = new Date();
-            indexTime = (end.getTime() - start.getTime()) / 1000;
+            indexTime = (System.nanoTime() - start) / 1_000_000_000.0;
             indexCount = indexer.getCounter();
             log.info("reindex took {}s, added {} files", indexTime, indexCount);
         } else {
@@ -105,7 +110,7 @@ public class LibbyApp {
         }
     }
 
-    private void instantiateIndexes() {
+    private static Index instantiateIndexes(Settings settings) {
         IndexFactory indexFactory;
         if (settings.traumIndex() != null) {
             log.info("using index at {}", settings.traumIndex());
@@ -115,7 +120,7 @@ public class LibbyApp {
             indexFactory = new RAMIndexFactory();
         }
 
-        index = indexFactory.createIndex();
+        return indexFactory.createIndex();
     }
 
     public Iterable<Item> query(String query) {
@@ -126,8 +131,8 @@ public class LibbyApp {
         return lister.list(path);
     }
 
-    public File convertFile(File in, EbookType type) {
-        return converter.convertFor(type, in);
+    public void convertFile(File in, File out, EbookType type) {
+        converter.convertFor(type, in, out);
     }
 
     public File getFile(String path) {
@@ -142,11 +147,20 @@ public class LibbyApp {
         if (type == EbookType.DONT_CONVERT) {
             return name;
         }
-        String nameWithoutExt = name.substring(0, name.indexOf("."));
+        String nameWithoutExt = name.substring(0, name.indexOf('.'));
         return String.format("%s.%s", nameWithoutExt, provider.extension(type));
     }
 
     public String status() {
-        return String.format("index takes %.2fMiB, contains %d files, took %ds to build", indexSize, indexCount, indexTime);
+        return String.format("index takes %.2fMiB, contains %d files, took %.1fs to build", indexSize, indexCount, indexTime);
     }
+
+    public static class Instance {
+        private static final LibbyApp app = new LibbyApp();
+
+        public static LibbyApp get() {
+            return app;
+        }
+    }
+
 }

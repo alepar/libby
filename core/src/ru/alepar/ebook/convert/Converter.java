@@ -6,6 +6,6 @@ import java.io.File;
 
 public interface Converter {
 
-    File convertFor(EbookType type, File file);
+    void convertFor(EbookType type, File file, File out);
 
 }

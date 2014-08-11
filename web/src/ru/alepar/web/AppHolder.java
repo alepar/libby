@@ -30,16 +30,13 @@ import java.util.ResourceBundle;
 
 // TODO wishlist
 /*
-    - paths along with just books  (small screens?)
     - converted books cache
 
-    - security tests for JavaFileSystem
     - counter tests for ItemIndexer (bigger author goes first, query with author and bookname gets book as first result, not overboosted author)
     - лукьяненко дозор http://lucene.apache.org/java/3_1_0/scoring.html
 
     - better book series format ru/С/Серова Марина/Мисс Робин Гуд
 
-    - when page errors - send report
     - paged output
  */
 

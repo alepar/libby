@@ -6,6 +6,7 @@
 <%@ page import="ru.alepar.servlet.EbookTypeFilter" %>
 <%@ page import="ru.alepar.web.AppHolder" %>
 <%@ page import="java.net.URLEncoder" %>
+<%@ page import="ru.alepar.web.ItemLinkFormatter" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 
 <%
@@ -30,11 +31,8 @@
 <div style="float: right">
     <form action="" method="get">
         <select name="type" onChange="this.form.submit()">
-            <%
-                for (EbookType type : EbookType.values()) {
-            %>
-            <option value="<%=type.name()%>" <%=type.equals(EbookTypeFilter.ebookType(request)) ? "selected" : ""%>><%=type.name()%>
-            </option>
+            <% for (EbookType type : EbookType.values()) { %>
+            <option value="<%=type.name()%>" <%=type == EbookTypeFilter.ebookType(request) ? "selected" : ""%>><%=type.name()%> </option>
             <% } %>
         </select>
         <% if(request.getParameter("query") != null) { %>
@@ -61,34 +59,13 @@
     %>
     <table width="100%">
         <%
+        final ItemLinkFormatter linkFormatter = new ItemLinkFormatter();
         for (Item item : items) {
-            final String link;
-            final String label;
-            final boolean bold;
-            if (item instanceof Author) {
-                final Author author = (Author) item;
-                link = "?path=" + URLEncoder.encode(author.path, "UTF-8");
-                label = author.name;
-                bold = true;
-            } else if (item instanceof Folder) {
-                final Folder folder = (Folder) item;
-                link = "?path=" + URLEncoder.encode(folder.path, "UTF-8");
-                label = folder.name;
-                bold = false;
-            } else if (item instanceof Book) {
-                final Book book = (Book) item;
-                link = "get?" + URLEncoder.encode(book.path, "UTF-8");
-                label = book.name;
-                bold = false;
-            } else {
-                label = "unknown item type " + item;
-                link = "";
-                bold = false;
-            }
-        %>
-        <tr><td><%=bold ? "<b>" : ""%><a href='<%=link%>'>
-            <%=label%>
-        </a><%=bold ? "</b>" : ""%></td></tr>
+            final Folder parent = item.parentFolder();%>
+        <tr><td>
+            <% if (query != null && !query.isEmpty() && parent != null && (!(item instanceof Folder) || !"..".equals(((Folder)item).name))) { %> <%=linkFormatter.getLink(parent)%> / <% } %>
+            <%=linkFormatter.getLink(item)%>
+        </td></tr>
     <% } %>
     </table>
 <%} %>

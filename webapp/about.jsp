@@ -1,4 +1,4 @@
-<%@ page import="ru.alepar.web.AppHolder" %>
+<%@ page import="ru.alepar.web.LibbyApp" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 <html>
 <head>
@@ -46,7 +46,7 @@ your ebook - just enter your word in translit form. We will translate it into ru
 
 <table width="100%">
     <tr align="center">
-        <td><%=AppHolder.status()%>
+        <td><%=LibbyApp.Instance.get().status()%>
         </td>
     </tr>
     <tr align="center">

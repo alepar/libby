@@ -1,12 +1,10 @@
 package ru.alepar.servlet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.alepar.ebook.format.EbookType;
 import ru.alepar.io.IOUtils;
 import ru.alepar.lib.translit.SomeTranslit;
 import ru.alepar.lib.translit.ToLatTranslit;
-import ru.alepar.web.AppHolder;
+import ru.alepar.web.LibbyApp;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,11 +14,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class GetServlet extends HttpServlet {
 
-    private static final Logger log = LoggerFactory.getLogger(GetServlet.class);
+    private final LibbyApp app = LibbyApp.Instance.get();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -31,9 +28,9 @@ public class GetServlet extends HttpServlet {
         String path = request.getParameterNames().nextElement();
 
         EbookType type = EbookTypeFilter.ebookType(request);
-        File in = AppHolder.getFile(path);
-        File out = AppHolder.convertFile(in, type);
-        String outName = AppHolder.convertName(in.getName(), type);
+        File in = app.getFile(path);
+        File out = app.convertFile(in, type);
+        String outName = app.convertName(in.getName(), type);
 
         sendFile(response, out, outName);
     }

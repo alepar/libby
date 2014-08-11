@@ -1,12 +1,9 @@
 <%@ page import="ru.alepar.ebook.format.EbookType" %>
-<%@ page import="ru.alepar.lib.model.Author" %>
-<%@ page import="ru.alepar.lib.model.Book" %>
 <%@ page import="ru.alepar.lib.model.Folder" %>
 <%@ page import="ru.alepar.lib.model.Item" %>
 <%@ page import="ru.alepar.servlet.EbookTypeFilter" %>
-<%@ page import="ru.alepar.web.AppHolder" %>
-<%@ page import="java.net.URLEncoder" %>
 <%@ page import="ru.alepar.web.ItemLinkFormatter" %>
+<%@ page import="ru.alepar.web.LibbyApp" %>
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=utf-8" %>
 
 <%
@@ -50,10 +47,10 @@
         Iterable<Item> items = null;
 
         if (query != null && !query.isEmpty()) {
-            items = AppHolder.query(query);
+            items = LibbyApp.Instance.get().query(query);
         }
         if (path != null && !path.isEmpty()) {
-            items = AppHolder.list(path);
+            items = LibbyApp.Instance.get().list(path);
         }
         if (items != null) {
     %>

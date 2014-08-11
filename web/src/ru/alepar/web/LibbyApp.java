@@ -25,9 +25,11 @@ import ru.alepar.setting.ResourceSettings;
 import ru.alepar.setting.Settings;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 // TODO wishlist
 /*
@@ -50,6 +52,9 @@ public class LibbyApp {
     private final Exec exec = new JavaRuntimeExec();
     private final UserAgentDetector detector = new UserAgentDetector();
     private final Converter converter = new CalibreConverter(settings.calibreConvert(), exec, provider);
+    private final ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final Set<File> convertingFiles = Collections.synchronizedSet(new HashSet<File>());
+    private final File tmpdir = new File(System.getProperty("java.io.tmpdir"));
 
     private final ItemStorage storage;
     private final Index index;
@@ -63,11 +68,18 @@ public class LibbyApp {
 
     public File getCachedFile(String path, EbookType type) {
         if (type == EbookType.DONT_CONVERT) {
-            return new File(path);
+            return new File(settings.traumRoot(), path);
         }
 
-        final File tmpdir = new File(System.getProperty("java.io.tmpdir"));
         return new File(tmpdir, "libby-" + hash(path + " | " + type.name()) + '.' + provider.extension(type));
+    }
+
+    public File getDoneFile(File file, EbookType type) {
+        if (type == EbookType.DONT_CONVERT) {
+            return file;
+        }
+
+        return new File(file.getPath() + ".done");
     }
 
     private static String hash(String s) {
@@ -131,8 +143,35 @@ public class LibbyApp {
         return lister.list(path);
     }
 
-    public void convertFile(File in, File out, EbookType type) {
-        converter.convertFor(type, in, out);
+    public void convertFile(final File in, final File out, final EbookType type) {
+        if (type == EbookType.DONT_CONVERT) {
+            return;
+        }
+
+        if(!convertingFiles.contains(in)) {
+            convertingFiles.add(in);
+            pool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        converter.convertFor(type, in, out);
+                        final File doneFile = getDoneFile(out, type);
+                        try {
+                            final FileWriter writer = new FileWriter(doneFile);
+                            try {
+                                writer.write(new char[0]);
+                            } finally {
+                                writer.close();
+                            }
+                        } catch (Exception e) {
+                            // failed to flag success, oh well, let's try next time
+                        }
+                    } finally {
+                        convertingFiles.remove(in);
+                    }
+                }
+            });
+        }
     }
 
     public File getFile(String path) {

@@ -28,7 +28,7 @@ public class JavaRuntimeExec implements Exec {
         }
     }
 
-    private class StreamSink extends Thread {
+    private static class StreamSink extends Thread {
         private final InputStream is;
 
         public StreamSink(InputStream is) {

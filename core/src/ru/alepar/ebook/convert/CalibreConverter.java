@@ -7,8 +7,12 @@ import ru.alepar.ebook.format.FormatProvider;
 import ru.alepar.io.IOUtils;
 
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CalibreConverter implements Converter {
+
+    private static final Pattern extensionPattern = Pattern.compile("^.*\\.(.*)\\.zip$");
 
     private final String binary;
     private final Exec exec;
@@ -49,14 +53,17 @@ public class CalibreConverter implements Converter {
     }
 
     private static File uncompress(File inFile) throws IOException {
-        String fileName = inFile.getName();
-        String fileNameWithoutZipExtension = fileName.substring(0, fileName.length() - 4);
-        ZipFile zipFile = new ZipFile(inFile);
-        ZipArchiveEntry entry = getFirstEntry(zipFile);
-        InputStream is = zipFile.getInputStream(entry);
+        final Matcher matcher = extensionPattern.matcher(inFile.getName());
+        if(!matcher.find()) {
+            throw new RuntimeException("can not detect extension of compressed file: " + inFile);
+        }
+
+        final ZipFile zipFile = new ZipFile(inFile);
+        final ZipArchiveEntry entry = getFirstEntry(zipFile);
+        final InputStream is = zipFile.getInputStream(entry);
         try {
-            File outFile = File.createTempFile("libby", ".unzip");
-            OutputStream fos = new FileOutputStream(outFile);
+            final File outFile = File.createTempFile("libby-", ".unzip." + matcher.group(1));
+            final OutputStream fos = new FileOutputStream(outFile);
             try {
                 IOUtils.copy(is, fos);
                 return outFile;

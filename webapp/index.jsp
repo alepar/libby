@@ -37,6 +37,12 @@
             </option>
             <% } %>
         </select>
+        <% if(request.getParameter("query") != null) { %>
+            <input type="hidden" name="query" value="<%=request.getParameter("query")%>" />
+        <% } %>
+        <% if(request.getParameter("path") != null) { %>
+            <input type="hidden" name="path" value="<%=request.getParameter("path")%>" />
+        <% } %>
     </form>
 </div>
 

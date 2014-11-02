@@ -1,4 +1,5 @@
 <%@ page import="ru.alepar.ebook.format.EbookType" %>
+<%@ page import="ru.alepar.lib.model.Author" %>
 <%@ page import="ru.alepar.lib.model.Folder" %>
 <%@ page import="ru.alepar.lib.model.Item" %>
 <%@ page import="ru.alepar.servlet.EbookTypeFilter" %>
@@ -62,6 +63,7 @@
         <tr><td>
             <% if (query != null && !query.isEmpty() && parent != null && (!(item instanceof Folder) || !"..".equals(((Folder)item).name))) { %> <%=linkFormatter.getLink(parent)%> / <% } %>
             <%=linkFormatter.getLink(item)%>
+            <% if(item instanceof Folder || item instanceof Author) { %> / <% } %>
         </td></tr>
     <% } %>
     </table>

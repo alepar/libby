@@ -1,26 +1,26 @@
 package ru.alepar.ebook.convert;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import ru.alepar.ebook.format.EbookType;
 import ru.alepar.ebook.format.FormatProvider;
 
 import java.io.File;
 
-import static org.hamcrest.Matchers.*;
-import static ru.alepar.testsupport.MyMatchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.startsWith;
+import static ru.alepar.testsupport.MyMatchers.item;
 
-@RunWith(JMock.class)
 public class CalibreConverterTest {
+
+    @Rule
+    public final JUnitRuleMockery mockery = new JUnitRuleMockery();
 
     private static final String BINARY = "/bin/someBinary.sh";
 
-    private final Mockery mockery = new JUnit4Mockery();
     private final Exec exec = mockery.mock(Exec.class);
     private final FormatProvider provider = mockery.mock(FormatProvider.class);
     private final CalibreConverter converter = new CalibreConverter(BINARY, exec, provider);
@@ -39,7 +39,7 @@ public class CalibreConverterTest {
     @Test
     public void executesRightBinary() throws Exception {
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(item(0, startsWith(BINARY))));
+            oneOf(exec).exec(with(item(0, startsWith(BINARY))));
             will(returnValue(0));
         }});
 
@@ -52,19 +52,7 @@ public class CalibreConverterTest {
         final String inputPath = input.getCanonicalPath();
 
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(item(1, equalTo(inputPath))));
-            will(returnValue(0));
-        }});
-
-        converter.convertFor(EbookType.KINDLE_DX, input, out);
-    }
-
-    @Test
-    public void secondArgIsOutputFileWithProperExtension() throws Exception {
-        final File input = new File("somefile.fb2");
-
-        mockery.checking(new Expectations() {{
-            one(exec).exec(with(item(2, like(".*\\.ext"))));
+            oneOf(exec).exec(with(item(1, equalTo(inputPath))));
             will(returnValue(0));
         }});
 
@@ -76,7 +64,7 @@ public class CalibreConverterTest {
         final File input = new File("somefile.fb2");
 
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(item(3, equalTo("--output-profile"))));
+            oneOf(exec).exec(with(item(3, equalTo("--output-profile"))));
             will(returnValue(0));
         }});
 
@@ -88,7 +76,7 @@ public class CalibreConverterTest {
         final File input = new File("somefile.fb2");
 
         mockery.checking(new Expectations() {{
-            one(exec).exec(with(item(4, equalTo("out_fmt"))));
+            oneOf(exec).exec(with(item(4, equalTo("out_fmt"))));
             will(returnValue(0));
         }});
 
